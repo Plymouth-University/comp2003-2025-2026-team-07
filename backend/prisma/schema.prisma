@@ -1,0 +1,218 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model alert_evaluations {
+  id            Int         @id @default(autoincrement())
+  alert_rule_id Int
+  telemetry_id  Int
+  triggered     Boolean
+  field_value   Decimal?    @db.Decimal
+  evaluated_at  DateTime    @default(now()) @db.Timestamptz(6)
+  alert_rules   alert_rules @relation(fields: [alert_rule_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  telemetry     telemetry   @relation(fields: [telemetry_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([alert_rule_id, telemetry_id], map: "unique_evaluation")
+  @@index([alert_rule_id], map: "idx_alert_evaluations_rule")
+  @@index([alert_rule_id, evaluated_at(sort: Desc)], map: "idx_alert_evaluations_rule_time")
+  @@index([telemetry_id], map: "idx_alert_evaluations_telemetry")
+  @@index([triggered], map: "idx_alert_evaluations_triggered")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model alert_history {
+  id                 Int          @id @default(autoincrement())
+  vessel_id          Int
+  alert_rule_id      Int?
+  alert_text         String
+  first_triggered_at DateTime     @db.Timestamptz(6)
+  last_triggered_at  DateTime     @db.Timestamptz(6)
+  repeat_count       Int          @default(0)
+  status             String       @default("active") @db.VarChar(20)
+  acknowledged_by    Int?
+  acknowledged_at    DateTime?    @db.Timestamptz(6)
+  resolved_at        DateTime?    @db.Timestamptz(6)
+  pagem_sent         Boolean      @default(false)
+  pagem_sent_at      DateTime?    @db.Timestamptz(6)
+  users              users?       @relation(fields: [acknowledged_by], references: [id], onUpdate: NoAction)
+  alert_rules        alert_rules? @relation(fields: [alert_rule_id], references: [id], onUpdate: NoAction)
+  vessels            vessels      @relation(fields: [vessel_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([first_triggered_at(sort: Desc)], map: "idx_alert_history_first_triggered")
+  @@index([last_triggered_at(sort: Desc)], map: "idx_alert_history_last_triggered")
+  @@index([alert_rule_id], map: "idx_alert_history_rule")
+  @@index([status], map: "idx_alert_history_status")
+  @@index([vessel_id], map: "idx_alert_history_vessel")
+  @@index([vessel_id, status], map: "idx_alert_history_vessel_status")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model alert_rules {
+  id                    Int                 @id @default(autoincrement())
+  vessel_id             Int
+  message_type_id       Int
+  name                  String              @db.VarChar(100)
+  field_name            String              @db.VarChar(100)
+  operator              String              @db.VarChar(10)
+  threshold             Decimal             @db.Decimal
+  consecutivity_enabled Boolean             @default(true)
+  consecutivity_count   Int                 @default(3)
+  time_enabled          Boolean             @default(false)
+  time_window_mins      Int                 @default(0)
+  time_count            Int                 @default(100)
+  enabled               Boolean             @default(true)
+  is_muted              Boolean             @default(false)
+  unmute_date           DateTime?           @db.Timestamptz(6)
+  created_at            DateTime            @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime            @default(now()) @db.Timestamptz(6)
+  alert_evaluations     alert_evaluations[]
+  alert_history         alert_history[]
+  message_types         message_types       @relation(fields: [message_type_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  vessels               vessels             @relation(fields: [vessel_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([enabled], map: "idx_alert_rules_enabled")
+  @@index([field_name], map: "idx_alert_rules_field_name")
+  @@index([is_muted], map: "idx_alert_rules_is_muted")
+  @@index([message_type_id], map: "idx_alert_rules_message_type")
+  @@index([vessel_id], map: "idx_alert_rules_vessel")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model geofences {
+  id            Int       @id @default(autoincrement())
+  vessel_id     Int
+  geofence_type String    @db.VarChar(20)
+  geometry      Json
+  is_muted      Boolean   @default(false)
+  unmute_date   DateTime? @db.Timestamptz(6)
+  created_at    DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime  @default(now()) @db.Timestamptz(6)
+  vessels       vessels   @relation(fields: [vessel_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([geometry], map: "idx_geofences_geometry", type: Gin)
+  @@index([is_muted], map: "idx_geofences_is_muted")
+  @@index([geofence_type], map: "idx_geofences_type")
+  @@index([vessel_id], map: "idx_geofences_vessel")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model message_types {
+  id                     Int                    @id @default(autoincrement())
+  name                   String                 @db.VarChar(100)
+  schema_path            String?                @db.VarChar(255)
+  expected_interval_mins Int                    @default(30)
+  late_threshold_mins    Int                    @default(30)
+  created_at             DateTime               @default(now()) @db.Timestamptz(6)
+  alert_rules            alert_rules[]
+  telemetry              telemetry[]
+  vessel_message_types   vessel_message_types[]
+
+  @@index([name], map: "idx_message_types_name")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model system_metadata {
+  id           Int      @id @default(1)
+  last_updated DateTime @default(now()) @db.Timestamptz(6)
+  app_version  String?  @default("1.0.0") @db.VarChar(20)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model telemetry {
+  id                Int                 @id @default(autoincrement())
+  vessel_id         Int
+  message_type_id   Int
+  timestamp         DateTime            @db.Timestamptz(6)
+  latitude          Float?
+  longitude         Float?
+  data              Json
+  received_at       DateTime            @default(now()) @db.Timestamptz(6)
+  alert_evaluations alert_evaluations[]
+  message_types     message_types       @relation(fields: [message_type_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  vessels           vessels             @relation(fields: [vessel_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([data], map: "idx_telemetry_data", type: Gin)
+  @@index([message_type_id], map: "idx_telemetry_message_type")
+  @@index([timestamp(sort: Desc)], map: "idx_telemetry_timestamp")
+  @@index([vessel_id], map: "idx_telemetry_vessel")
+  @@index([vessel_id, timestamp(sort: Desc)], map: "idx_telemetry_vessel_timestamp")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model users {
+  id                                             Int             @id @default(autoincrement())
+  username                                       String          @unique @db.VarChar(80)
+  email                                          String          @unique @db.VarChar(120)
+  password_hash                                  String          @db.VarChar(255)
+  pager_id                                       String?         @db.VarChar(20)
+  role                                           String          @default("supervisor") @db.VarChar(20)
+  created_at                                     DateTime        @default(now()) @db.Timestamptz(6)
+  last_login_at                                  DateTime?       @db.Timestamptz(6)
+  alert_history                                  alert_history[]
+  vessels_vessels_primary_supervisor_idTousers   vessels[]       @relation("vessels_primary_supervisor_idTousers")
+  vessels_vessels_secondary_supervisor_idTousers vessels[]       @relation("vessels_secondary_supervisor_idTousers")
+
+  @@index([email], map: "idx_users_email")
+  @@index([role], map: "idx_users_role")
+  @@index([username], map: "idx_users_username")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model vessel_message_types {
+  id              Int           @id @default(autoincrement())
+  vessel_id       Int
+  message_type_id Int
+  message_types   message_types @relation(fields: [message_type_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  vessels         vessels       @relation(fields: [vessel_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([vessel_id, message_type_id], map: "unique_vessel_message_type")
+  @@index([message_type_id], map: "idx_vessel_message_types_message_type")
+  @@index([vessel_id], map: "idx_vessel_message_types_vessel")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model vessels {
+  id                                           Int                    @id @default(autoincrement())
+  name                                         String                 @db.VarChar(100)
+  imei                                         String                 @unique @db.VarChar(20)
+  at_sea_status                                Boolean                @default(true)
+  emergency_alert_active                       Boolean                @default(false)
+  escalation_threshold                         Int                    @default(3)
+  repeat_interval_mins                         Int                    @default(5)
+  last_check_in_at                             DateTime?              @db.Timestamptz(6)
+  primary_supervisor_id                        Int?
+  secondary_supervisor_id                      Int?
+  latest_position                              Json?
+  created_at                                   DateTime               @default(now()) @db.Timestamptz(6)
+  updated_at                                   DateTime               @default(now()) @db.Timestamptz(6)
+  alert_history                                alert_history[]
+  alert_rules                                  alert_rules[]
+  geofences                                    geofences[]
+  telemetry                                    telemetry[]
+  vessel_message_types                         vessel_message_types[]
+  users_vessels_primary_supervisor_idTousers   users?                 @relation("vessels_primary_supervisor_idTousers", fields: [primary_supervisor_id], references: [id], onUpdate: NoAction)
+  users_vessels_secondary_supervisor_idTousers users?                 @relation("vessels_secondary_supervisor_idTousers", fields: [secondary_supervisor_id], references: [id], onUpdate: NoAction)
+
+  @@index([at_sea_status], map: "idx_vessels_at_sea_status")
+  @@index([emergency_alert_active], map: "idx_vessels_emergency_active")
+  @@index([imei], map: "idx_vessels_imei")
+  @@index([latest_position], map: "idx_vessels_latest_position", type: Gin)
+  @@index([name], map: "idx_vessels_name")
+  @@index([primary_supervisor_id], map: "idx_vessels_primary_supervisor")
+  @@index([secondary_supervisor_id], map: "idx_vessels_secondary_supervisor")
+}

@@ -1,0 +1,3855 @@
+{
+    "platforms": [
+        {
+            "name": "PC14",
+            "imei": "301434061995380",
+            "at_sea_status": true,
+            "geofences": {
+                "keep_in_zone": [
+                    [
+                        50.16458378401074,
+                        -3.7161254882812504
+                    ],
+                    [
+                        50.18261441454758,
+                        -3.823928833007813
+                    ],
+                    [
+                        50.2142614968672,
+                        -3.895339965820313
+                    ],
+                    [
+                        50.249839390601736,
+                        -3.9193725585937504
+                    ],
+                    [
+                        50.26959341755607,
+                        -3.9701843261718754
+                    ],
+                    [
+                        50.2594979383533,
+                        -4.023742675781251
+                    ],
+                    [
+                        50.27178780378988,
+                        -4.082107543945313
+                    ],
+                    [
+                        50.297235294280476,
+                        -4.156265258789063
+                    ],
+                    [
+                        50.29526140688212,
+                        -4.197120666503907
+                    ],
+                    [
+                        50.29021665589062,
+                        -4.237976074218751
+                    ],
+                    [
+                        50.30622641164341,
+                        -4.266128540039063
+                    ],
+                    [
+                        50.32617623423627,
+                        -4.305267333984376
+                    ],
+                    [
+                        50.325737866569895,
+                        -4.391784667968751
+                    ],
+                    [
+                        50.30732277310126,
+                        -4.476928710937501
+                    ],
+                    [
+                        50.29021665589062,
+                        -4.568252563476563
+                    ],
+                    [
+                        50.290655351123256,
+                        -4.643783569335938
+                    ],
+                    [
+                        50.255546950930764,
+                        -4.704895019531251
+                    ],
+                    [
+                        50.20767008473418,
+                        -4.720687866210938
+                    ],
+                    [
+                        50.16238446114941,
+                        -4.812698364257813
+                    ],
+                    [
+                        50.11265277485957,
+                        -4.925994873046876
+                    ],
+                    [
+                        50.045675503292536,
+                        -4.968566894531251
+                    ],
+                    [
+                        49.95033627078014,
+                        -4.969940185546876
+                    ],
+                    [
+                        49.868972216312436,
+                        -4.652709960937501
+                    ],
+                    [
+                        49.875167784397426,
+                        -3.9797973632812504
+                    ],
+                    [
+                        50.02450534394439,
+                        -3.686599731445313
+                    ]
+                ],
+                "keep_out_points": [
+                    {
+                        "lat": 50.18379606278438,
+                        "lon": -4.268059730529786,
+                        "name": "Eddystone",
+                        "radius": 1800
+                    }
+                ],
+                "keep_out_zones": [
+                    {
+                        "coordinates": [
+                            [
+                                50.05625708299454,
+                                -3.906326293945313
+                            ],
+                            [
+                                49.97242235423708,
+                                -4.531173706054688
+                            ],
+                            [
+                                49.94415035164548,
+                                -4.485855102539063
+                            ],
+                            [
+                                50.02009371923324,
+                                -3.9207458496093754
+                            ]
+                        ],
+                        "name": "Shipping Lane"
+                    }
+                ],
+                "mute_info": {
+                    "keep_in": {
+                        "is_muted": true,
+                        "unmute_date": "2025-09-15T00:16:22.376035+00:00"
+                    },
+                    "keep_out": [],
+                    "keep_out_points": []
+                }
+            },
+            "emergency_alert_status": {
+                "is_active": false,
+                "alert_text": "Time since last message for platform: PC14 is 60 which is greater than the acceptable late time of 10 minutes",
+                "first_triggered": "2025-10-22T10:15:06.146444+00:00",
+                "last_triggered": "2025-10-22T10:20:18.541181+00:00",
+                "n_repeats": 1,
+                "n_repeats_until_escalation": 3,
+                "last_check_in_time": "2025-10-22T10:20:37.270272+00:00",
+                "repeat_interval_mins": 5,
+                "primary_responders": [
+                    "7672"
+                ],
+                "secondary_responders": []
+            },
+            "message_types": [
+                {
+                    "name": "Format 5",
+                    "decoding_schema_path": "message_format3.json",
+                    "acceptable_time_between_messages": 30,
+                    "acceptable_late_time_mins": 30,
+                    "last_N_message_timestrings": [
+                        "2025-10-28T22:24:58+00:00",
+                        "2025-10-28T22:34:59+00:00",
+                        "2025-10-28T22:45:00+00:00",
+                        "2025-10-28T22:55:01+00:00",
+                        "2025-10-28T23:05:01+00:00",
+                        "2025-10-28T23:15:00+00:00"
+                    ],
+                    "alert_triggers": [
+                        {
+                            "name": "Heading Error",
+                            "field": "Average Heading Error",
+                            "comparator": "||>=",
+                            "value_threshold": 35.0,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 60,
+                            "time_trigger_count": 20,
+                            "is_muted": true,
+                            "unmute_date": "2025-09-15T13:03:12.068138+00:00",
+                            "last_N_message_values": [
+                                -5,
+                                -5,
+                                -6,
+                                -7,
+                                -2,
+                                -2
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Low Wind",
+                            "field": "Navigator Wind Speed Average",
+                            "comparator": "<=",
+                            "value_threshold": 3.0,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 10,
+                            "is_muted": true,
+                            "unmute_date": "2025-06-29T06:02:15.935038+00:00",
+                            "last_N_message_values": [
+                                12.7,
+                                12.2,
+                                12.7,
+                                12.6,
+                                11.1,
+                                11.3
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Backwards VMG",
+                            "field": "Average Speed Towards Target Waypoint",
+                            "comparator": "<=",
+                            "value_threshold": -1.0,
+                            "consecutivity_trigger_count": 8,
+                            "time_trigger_period_mins": 30,
+                            "time_trigger_count": 15,
+                            "is_muted": true,
+                            "unmute_date": "2025-05-13T07:19:31.931821+00:00",
+                            "last_N_message_values": [
+                                -0.66,
+                                -0.54,
+                                -0.51,
+                                1.04,
+                                1.12,
+                                1.18
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Backwards VMC",
+                            "field": "platform speed on target heading mean",
+                            "comparator": "<=",
+                            "value_threshold": 0,
+                            "consecutivity_trigger_count": 8,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 10,
+                            "is_muted": true,
+                            "unmute_date": "2025-04-14T12:09:12.779957+00:00",
+                            "last_N_message_values": [
+                                0.75,
+                                0.72,
+                                0.52,
+                                1.21,
+                                1.12,
+                                1.18
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Dist To WP",
+                            "field": "distance to wp",
+                            "comparator": ">=",
+                            "value_threshold": 9.5,
+                            "consecutivity_trigger_count": 2,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 20,
+                            "is_muted": true,
+                            "unmute_date": "2025-07-28T08:33:08.674959+00:00",
+                            "last_N_message_values": [
+                                3.1,
+                                3.15,
+                                3.25,
+                                3.1,
+                                2.9,
+                                2.7
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Reset Detected",
+                            "field": "is first since boot",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 1,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-07-26T19:08:32.200187+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Power Sensor Comms Error",
+                            "field": "power sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Wind Sensor Comms Error",
+                            "field": "wind sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 10,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-05-22T18:19:52.640844+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": true,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Temperature Sensor 1 Comms Error",
+                            "field": "sst sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-04-14T12:10:04.257846+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "GPS Comms Error",
+                            "field": "gps comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 5,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": true,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "GPS Fix Error",
+                            "field": "gps fix error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 5,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": true,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Heading Sensor Comms Error",
+                            "field": "heading sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 6,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": true,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Heading Sensor Value Error",
+                            "field": "heading sensor value error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "SD Error",
+                            "field": "sd card write error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 6,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Aux MCU Comms Error",
+                            "field": "servo mcu comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 30,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": true,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Rudder Stall Detected",
+                            "field": "rudder stall flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-02-02T10:27:20.977776+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Sail Stall Detected",
+                            "field": "sail stall flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Rudder Encoder Error",
+                            "field": "rudder encoder error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-01-31T12:46:26.812358+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                1,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                true,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Sail Encoder Error",
+                            "field": "sail encoder error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-01-31T12:46:31.176265+00:00",
+                            "last_N_message_values": [
+                                1,
+                                0,
+                                0,
+                                1,
+                                0,
+                                1
+                            ],
+                            "last_N_message_triggered_status": [
+                                true,
+                                false,
+                                false,
+                                true,
+                                false,
+                                true
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        }
+                    ]
+                }
+            ],
+            "latest_position": {
+                "latitude": 50.21714,
+                "longitude": -4.30792,
+                "timestamp": "2025-10-28T23:15:00+00:00"
+            }
+        },
+        {
+            "name": "PC13",
+            "imei": "301434061994390",
+            "at_sea_status": true,
+            "geofences": {
+                "keep_in_zone": [
+                    [
+                        50.16458378401074,
+                        -3.7161254882812504
+                    ],
+                    [
+                        50.18261441454758,
+                        -3.823928833007813
+                    ],
+                    [
+                        50.2142614968672,
+                        -3.895339965820313
+                    ],
+                    [
+                        50.249839390601736,
+                        -3.9193725585937504
+                    ],
+                    [
+                        50.26959341755607,
+                        -3.9701843261718754
+                    ],
+                    [
+                        50.2594979383533,
+                        -4.023742675781251
+                    ],
+                    [
+                        50.27178780378988,
+                        -4.082107543945313
+                    ],
+                    [
+                        50.297235294280476,
+                        -4.156265258789063
+                    ],
+                    [
+                        50.29526140688212,
+                        -4.197120666503907
+                    ],
+                    [
+                        50.29021665589062,
+                        -4.237976074218751
+                    ],
+                    [
+                        50.30622641164341,
+                        -4.266128540039063
+                    ],
+                    [
+                        50.32617623423627,
+                        -4.305267333984376
+                    ],
+                    [
+                        50.325737866569895,
+                        -4.391784667968751
+                    ],
+                    [
+                        50.30732277310126,
+                        -4.476928710937501
+                    ],
+                    [
+                        50.29021665589062,
+                        -4.568252563476563
+                    ],
+                    [
+                        50.290655351123256,
+                        -4.643783569335938
+                    ],
+                    [
+                        50.255546950930764,
+                        -4.704895019531251
+                    ],
+                    [
+                        50.20767008473418,
+                        -4.720687866210938
+                    ],
+                    [
+                        50.16238446114941,
+                        -4.812698364257813
+                    ],
+                    [
+                        50.11265277485957,
+                        -4.925994873046876
+                    ],
+                    [
+                        50.045675503292536,
+                        -4.968566894531251
+                    ],
+                    [
+                        49.95033627078014,
+                        -4.969940185546876
+                    ],
+                    [
+                        49.868972216312436,
+                        -4.652709960937501
+                    ],
+                    [
+                        49.875167784397426,
+                        -3.9797973632812504
+                    ],
+                    [
+                        50.02450534394439,
+                        -3.686599731445313
+                    ]
+                ],
+                "keep_out_points": [
+                    {
+                        "lat": 50.18379606278438,
+                        "lon": -4.268059730529786,
+                        "name": "Eddystone",
+                        "radius": 1800
+                    }
+                ],
+                "keep_out_zones": [
+                    {
+                        "coordinates": [
+                            [
+                                50.05625708299454,
+                                -3.906326293945313
+                            ],
+                            [
+                                49.97242235423708,
+                                -4.531173706054688
+                            ],
+                            [
+                                49.94415035164548,
+                                -4.485855102539063
+                            ],
+                            [
+                                50.02009371923324,
+                                -3.9207458496093754
+                            ]
+                        ],
+                        "name": "Shipping Lane"
+                    }
+                ],
+                "mute_info": {
+                    "keep_in": {
+                        "is_muted": true,
+                        "unmute_date": "2025-10-28T22:07:00.719356+00:00"
+                    },
+                    "keep_out": [],
+                    "keep_out_points": [
+                        {
+                            "is_muted": true,
+                            "unmute_date": "2025-09-21T15:20:33.713802+00:00"
+                        }
+                    ]
+                }
+            },
+            "emergency_alert_status": {
+                "is_active": false,
+                "alert_text": "Vessel outside of keep-in zone",
+                "first_triggered": "2025-10-28T21:10:06.368633+00:00",
+                "last_triggered": "2025-10-28T21:33:29.142983+00:00",
+                "n_repeats": 4,
+                "n_repeats_until_escalation": 3,
+                "last_check_in_time": "2025-10-28T21:37:05.522393+00:00",
+                "repeat_interval_mins": 5,
+                "primary_responders": [
+                    "7672"
+                ],
+                "secondary_responders": []
+            },
+            "message_types": [
+                {
+                    "name": "Format 5",
+                    "decoding_schema_path": "message_format3.json",
+                    "acceptable_time_between_messages": 90,
+                    "acceptable_late_time_mins": 90,
+                    "last_N_message_timestrings": [
+                        "2025-10-28T23:01:03+00:00",
+                        "2025-10-28T23:03:01+00:00",
+                        "2025-10-28T23:05:00+00:00",
+                        "2025-10-28T23:07:01+00:00",
+                        "2025-10-28T23:08:59+00:00",
+                        "2025-10-28T23:11:05+00:00",
+                        "2025-10-28T23:13:01+00:00",
+                        "2025-10-28T23:15:00+00:00",
+                        "2025-10-28T23:17:01+00:00",
+                        "2025-10-28T23:19:01+00:00"
+                    ],
+                    "alert_triggers": [
+                        {
+                            "name": "Heading Error",
+                            "field": "Average Heading Error",
+                            "comparator": "||>=",
+                            "value_threshold": 35.0,
+                            "consecutivity_trigger_count": 10,
+                            "time_trigger_period_mins": 60,
+                            "time_trigger_count": 20,
+                            "is_muted": true,
+                            "unmute_date": "2025-09-15T13:02:53.761971+00:00",
+                            "last_N_message_values": [
+                                -2,
+                                0,
+                                3,
+                                4,
+                                4,
+                                2,
+                                5,
+                                7,
+                                5,
+                                23
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": true,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Low Wind",
+                            "field": "Navigator Wind Speed Average",
+                            "comparator": "<=",
+                            "value_threshold": 3.0,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 10,
+                            "is_muted": true,
+                            "unmute_date": "2025-06-29T06:02:15.935038+00:00",
+                            "last_N_message_values": [
+                                12.7,
+                                12.7,
+                                12.5,
+                                11.7,
+                                11.3,
+                                11.7,
+                                10.8,
+                                10.2,
+                                11,
+                                10.6
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Backwards VMG",
+                            "field": "Average Speed Towards Target Waypoint",
+                            "comparator": "<=",
+                            "value_threshold": -1.0,
+                            "consecutivity_trigger_count": 8,
+                            "time_trigger_period_mins": 30,
+                            "time_trigger_count": 15,
+                            "is_muted": true,
+                            "unmute_date": "2025-09-21T06:51:45.634479+00:00",
+                            "last_N_message_values": [
+                                0.56,
+                                0.54,
+                                0.6,
+                                0.65,
+                                0.58,
+                                0.69,
+                                0.47,
+                                0.37,
+                                0.34,
+                                0.21
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": true,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Backwards VMC",
+                            "field": "platform speed on target heading mean",
+                            "comparator": "<=",
+                            "value_threshold": 0,
+                            "consecutivity_trigger_count": 8,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 10,
+                            "is_muted": true,
+                            "unmute_date": "2025-04-14T12:09:12.779957+00:00",
+                            "last_N_message_values": [
+                                1.13,
+                                1.17,
+                                0.83,
+                                0.87,
+                                0.83,
+                                0.96,
+                                0.8,
+                                0.74,
+                                0.74,
+                                0.5
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Dist To WP",
+                            "field": "distance to wp",
+                            "comparator": ">=",
+                            "value_threshold": 9.5,
+                            "consecutivity_trigger_count": 2,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 20,
+                            "is_muted": true,
+                            "unmute_date": "2025-07-28T08:33:08.674959+00:00",
+                            "last_N_message_values": [
+                                0.8,
+                                0.8,
+                                0.8,
+                                0.75,
+                                0.75,
+                                0.7,
+                                0.7,
+                                0.7,
+                                0.7,
+                                0.65
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": true,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Reset Detected",
+                            "field": "is first since boot",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 1,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-07-26T19:08:32.200187+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Power Sensor Comms Error",
+                            "field": "power sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 10,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Wind Sensor Comms Error",
+                            "field": "wind sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 10,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-05-22T18:19:52.640844+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": true,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Temperature Sensor 1 Comms Error",
+                            "field": "sst sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-04-14T12:10:04.257846+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "GPS Comms Error",
+                            "field": "gps comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 5,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": true,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "GPS Fix Error",
+                            "field": "gps fix error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 5,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": true,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Heading Sensor Comms Error",
+                            "field": "heading sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 5,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": true,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Heading Sensor Value Error",
+                            "field": "heading sensor value error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 5,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": true,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "SD Error",
+                            "field": "sd card write error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Aux MCU Comms Error",
+                            "field": "servo mcu comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Rudder Stall Detected",
+                            "field": "rudder stall flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-09-15T12:48:50.679963+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Sail Stall Detected",
+                            "field": "sail stall flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Rudder Encoder Error",
+                            "field": "rudder encoder error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-01-31T12:46:26.812358+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Sail Encoder Error",
+                            "field": "sail encoder error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-01-31T12:46:31.176265+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        }
+                    ]
+                }
+            ],
+            "latest_position": {
+                "latitude": 50.27323,
+                "longitude": -4.17584,
+                "timestamp": "2025-10-28T23:19:01+00:00"
+            }
+        },
+        {
+            "name": "PC7",
+            "imei": "301434061999380",
+            "at_sea_status": true,
+            "geofences": {},
+            "emergency_alert_status": {
+                "is_active": false,
+                "alert_text": "Vessel outside of keep-in zone",
+                "first_triggered": "2025-08-19T15:31:01.152592+00:00",
+                "last_triggered": "2025-10-27T16:08:59.733429+00:00",
+                "n_repeats": 1,
+                "n_repeats_until_escalation": 3,
+                "last_check_in_time": "2025-10-27T16:09:56.879333+00:00",
+                "repeat_interval_mins": 5,
+                "primary_responders": [
+                    "7672"
+                ],
+                "secondary_responders": []
+            },
+            "message_types": [
+                {
+                    "name": "Format 5",
+                    "decoding_schema_path": "message_format3.json",
+                    "acceptable_time_between_messages": 60,
+                    "acceptable_late_time_mins": 60,
+                    "last_N_message_timestrings": [
+                        "2025-10-28T22:25:58+00:00",
+                        "2025-10-28T22:35:57+00:00",
+                        "2025-10-28T22:46:00+00:00",
+                        "2025-10-28T22:56:00+00:00",
+                        "2025-10-28T23:06:00+00:00",
+                        "2025-10-28T23:16:00+00:00"
+                    ],
+                    "alert_triggers": [
+                        {
+                            "name": "Heading Error",
+                            "field": "Average Heading Error",
+                            "comparator": "||>=",
+                            "value_threshold": 35.0,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 60,
+                            "time_trigger_count": 20,
+                            "is_muted": true,
+                            "unmute_date": "2025-08-14T14:52:25.959179+00:00",
+                            "last_N_message_values": [
+                                -14,
+                                -11,
+                                -11,
+                                -8,
+                                -10,
+                                -7
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": true,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Low Wind",
+                            "field": "Navigator Wind Speed Average",
+                            "comparator": "<=",
+                            "value_threshold": 3.0,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 10,
+                            "is_muted": true,
+                            "unmute_date": "2025-06-29T06:02:15.935038+00:00",
+                            "last_N_message_values": [
+                                6.8,
+                                7.7,
+                                7.3,
+                                7.7,
+                                7.6,
+                                7.8
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Backwards VMG",
+                            "field": "Average Speed Towards Target Waypoint",
+                            "comparator": "<=",
+                            "value_threshold": -1.0,
+                            "consecutivity_trigger_count": 8,
+                            "time_trigger_period_mins": 30,
+                            "time_trigger_count": 15,
+                            "is_muted": true,
+                            "unmute_date": "2025-05-13T07:19:31.931821+00:00",
+                            "last_N_message_values": [
+                                -0.17,
+                                -0.13,
+                                -0.19,
+                                -0.24,
+                                -0.19,
+                                -0.23
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Backwards VMC",
+                            "field": "platform speed on target heading mean",
+                            "comparator": "<=",
+                            "value_threshold": 0,
+                            "consecutivity_trigger_count": 8,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 10,
+                            "is_muted": true,
+                            "unmute_date": "2025-04-14T12:09:12.779957+00:00",
+                            "last_N_message_values": [
+                                0.15,
+                                0.25,
+                                0.18,
+                                0.31,
+                                0.22,
+                                0.37
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Dist To WP",
+                            "field": "distance to wp",
+                            "comparator": ">=",
+                            "value_threshold": 9.5,
+                            "consecutivity_trigger_count": 2,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 20,
+                            "is_muted": true,
+                            "unmute_date": "2025-07-28T08:33:08.674959+00:00",
+                            "last_N_message_values": [
+                                9.55,
+                                9.55,
+                                9.6,
+                                9.6,
+                                9.65,
+                                9.7
+                            ],
+                            "last_N_message_triggered_status": [
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Reset Detected",
+                            "field": "is first since boot",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 1,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-07-26T19:08:32.200187+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Power Sensor Comms Error",
+                            "field": "power sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Wind Sensor Comms Error",
+                            "field": "wind sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-05-22T18:19:52.640844+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Temperature Sensor 1 Comms Error",
+                            "field": "sst sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-04-14T12:10:04.257846+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "GPS Comms Error",
+                            "field": "gps comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "GPS Fix Error",
+                            "field": "gps fix error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Heading Sensor Comms Error",
+                            "field": "heading sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Heading Sensor Value Error",
+                            "field": "heading sensor value error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "SD Error",
+                            "field": "sd card write error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Aux MCU Comms Error",
+                            "field": "servo mcu comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Rudder Stall Detected",
+                            "field": "rudder stall flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-02-02T10:27:20.977776+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Sail Stall Detected",
+                            "field": "sail stall flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Rudder Encoder Error",
+                            "field": "rudder encoder error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-01-31T12:46:26.812358+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Sail Encoder Error",
+                            "field": "sail encoder error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-01-31T12:46:31.176265+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        }
+                    ]
+                }
+            ],
+            "latest_position": {
+                "latitude": 29.73187,
+                "longitude": -88.24184,
+                "timestamp": "2025-10-28T23:16:00+00:00"
+            }
+        },
+        {
+            "name": "PC10",
+            "imei": "301434061991400",
+            "at_sea_status": true,
+            "geofences": {},
+            "emergency_alert_status": {
+                "is_active": false,
+                "alert_text": "Heading Error (||>= 35.0) is met. Consecutivity: True",
+                "first_triggered": "2025-10-27T18:35:28.402830+00:00",
+                "last_triggered": "2025-10-27T18:47:15.233625+00:00",
+                "n_repeats": 2,
+                "n_repeats_until_escalation": 3,
+                "last_check_in_time": "2025-10-27T18:47:51.735624+00:00",
+                "repeat_interval_mins": 5,
+                "primary_responders": [
+                    "7672"
+                ],
+                "secondary_responders": []
+            },
+            "message_types": [
+                {
+                    "name": "Format 5",
+                    "decoding_schema_path": "message_format3.json",
+                    "acceptable_time_between_messages": 60,
+                    "acceptable_late_time_mins": 60,
+                    "last_N_message_timestrings": [
+                        "2025-10-28T22:21:57+00:00",
+                        "2025-10-28T22:31:58+00:00",
+                        "2025-10-28T22:41:57+00:00",
+                        "2025-10-28T22:51:57+00:00",
+                        "2025-10-28T23:01:58+00:00",
+                        "2025-10-28T23:11:57+00:00"
+                    ],
+                    "alert_triggers": [
+                        {
+                            "name": "Heading Error",
+                            "field": "Average Heading Error",
+                            "comparator": "||>=",
+                            "value_threshold": 35.0,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 60,
+                            "time_trigger_count": 20,
+                            "is_muted": true,
+                            "unmute_date": "2025-10-27T19:47:57.105712+00:00",
+                            "last_N_message_values": [
+                                1,
+                                8,
+                                -8,
+                                44,
+                                0,
+                                41
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                true,
+                                false,
+                                true
+                            ],
+                            "consecutivity_enabled": true,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Low Wind",
+                            "field": "Navigator Wind Speed Average",
+                            "comparator": "<=",
+                            "value_threshold": 3.0,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 10,
+                            "is_muted": true,
+                            "unmute_date": "2025-06-29T06:02:15.935038+00:00",
+                            "last_N_message_values": [
+                                6.1,
+                                6.9,
+                                7.8,
+                                7,
+                                6.9,
+                                7
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Backwards VMG",
+                            "field": "Average Speed Towards Target Waypoint",
+                            "comparator": "<=",
+                            "value_threshold": -1.0,
+                            "consecutivity_trigger_count": 8,
+                            "time_trigger_period_mins": 30,
+                            "time_trigger_count": 15,
+                            "is_muted": true,
+                            "unmute_date": "2025-05-13T07:19:31.931821+00:00",
+                            "last_N_message_values": [
+                                -0.23,
+                                -0.29,
+                                -0.16,
+                                -0.36,
+                                -0.34,
+                                -0.32
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Backwards VMC",
+                            "field": "platform speed on target heading mean",
+                            "comparator": "<=",
+                            "value_threshold": 0,
+                            "consecutivity_trigger_count": 8,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 10,
+                            "is_muted": true,
+                            "unmute_date": "2025-04-14T12:09:12.779957+00:00",
+                            "last_N_message_values": [
+                                -0.17,
+                                -0.2,
+                                -0.01,
+                                -0.29,
+                                -0.13,
+                                -0.18
+                            ],
+                            "last_N_message_triggered_status": [
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Dist To WP",
+                            "field": "distance to wp",
+                            "comparator": ">=",
+                            "value_threshold": 9.5,
+                            "consecutivity_trigger_count": 2,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 20,
+                            "is_muted": true,
+                            "unmute_date": "2025-07-28T08:33:08.674959+00:00",
+                            "last_N_message_values": [
+                                10.2,
+                                10.25,
+                                10.3,
+                                10.35,
+                                10.4,
+                                10.45
+                            ],
+                            "last_N_message_triggered_status": [
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Reset Detected",
+                            "field": "is first since boot",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 1,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-07-26T19:08:32.200187+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Power Sensor Comms Error",
+                            "field": "power sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Wind Sensor Comms Error",
+                            "field": "wind sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-05-22T18:19:52.640844+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Temperature Sensor 1 Comms Error",
+                            "field": "sst sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-04-14T12:10:04.257846+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "GPS Comms Error",
+                            "field": "gps comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                1,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                true,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "GPS Fix Error",
+                            "field": "gps fix error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                1,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                true,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Heading Sensor Comms Error",
+                            "field": "heading sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Heading Sensor Value Error",
+                            "field": "heading sensor value error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "SD Error",
+                            "field": "sd card write error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Aux MCU Comms Error",
+                            "field": "servo mcu comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Rudder Stall Detected",
+                            "field": "rudder stall flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-02-02T10:27:20.977776+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Sail Stall Detected",
+                            "field": "sail stall flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Rudder Encoder Error",
+                            "field": "rudder encoder error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-01-31T12:46:26.812358+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                1,
+                                1
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                true,
+                                true
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Sail Encoder Error",
+                            "field": "sail encoder error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-01-31T12:46:31.176265+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        }
+                    ]
+                }
+            ],
+            "latest_position": {
+                "latitude": 29.78881,
+                "longitude": -88.29111,
+                "timestamp": "2025-10-28T23:11:57+00:00"
+            }
+        },
+        {
+            "name": "PC6",
+            "imei": "301434061990400",
+            "at_sea_status": true,
+            "geofences": {},
+            "emergency_alert_status": {
+                "is_active": false,
+                "alert_text": "Dist To WP (>= 9.5) is met. Consecutivity: True",
+                "first_triggered": "2025-10-28T15:11:08.772354+00:00",
+                "last_triggered": "2025-10-28T15:11:08.772354+00:00",
+                "n_repeats": 0,
+                "n_repeats_until_escalation": 3,
+                "last_check_in_time": "2025-10-28T15:12:13.311793+00:00",
+                "repeat_interval_mins": 5,
+                "primary_responders": [
+                    "7672"
+                ],
+                "secondary_responders": []
+            },
+            "message_types": [
+                {
+                    "name": "Format 5",
+                    "decoding_schema_path": "message_format3.json",
+                    "acceptable_time_between_messages": 60,
+                    "acceptable_late_time_mins": 60,
+                    "last_N_message_timestrings": [
+                        "2025-10-28T22:24:59+00:00",
+                        "2025-10-28T22:34:58+00:00",
+                        "2025-10-28T22:44:59+00:00",
+                        "2025-10-28T22:54:58+00:00",
+                        "2025-10-28T23:04:59+00:00",
+                        "2025-10-28T23:14:58+00:00"
+                    ],
+                    "alert_triggers": [
+                        {
+                            "name": "Heading Error",
+                            "field": "Average Heading Error",
+                            "comparator": "||>=",
+                            "value_threshold": 35.0,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 60,
+                            "time_trigger_count": 20,
+                            "is_muted": true,
+                            "unmute_date": "2025-08-14T14:52:25.959179+00:00",
+                            "last_N_message_values": [
+                                7,
+                                8,
+                                8,
+                                5,
+                                7,
+                                6
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": true,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Low Wind",
+                            "field": "Navigator Wind Speed Average",
+                            "comparator": "<=",
+                            "value_threshold": 3.0,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 10,
+                            "is_muted": true,
+                            "unmute_date": "2025-06-29T06:02:15.935038+00:00",
+                            "last_N_message_values": [
+                                11.6,
+                                11.8,
+                                11.3,
+                                11.3,
+                                12.2,
+                                12.3
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Backwards VMG",
+                            "field": "Average Speed Towards Target Waypoint",
+                            "comparator": "<=",
+                            "value_threshold": -1.0,
+                            "consecutivity_trigger_count": 8,
+                            "time_trigger_period_mins": 30,
+                            "time_trigger_count": 15,
+                            "is_muted": true,
+                            "unmute_date": "2025-05-13T07:19:31.931821+00:00",
+                            "last_N_message_values": [
+                                1.33,
+                                1.39,
+                                1.31,
+                                1.58,
+                                1.69,
+                                1.74
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Backwards VMC",
+                            "field": "platform speed on target heading mean",
+                            "comparator": "<=",
+                            "value_threshold": 0,
+                            "consecutivity_trigger_count": 8,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 10,
+                            "is_muted": true,
+                            "unmute_date": "2025-04-14T12:09:12.779957+00:00",
+                            "last_N_message_values": [
+                                1.33,
+                                1.39,
+                                1.31,
+                                1.58,
+                                1.69,
+                                1.74
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Dist To WP",
+                            "field": "distance to wp",
+                            "comparator": ">=",
+                            "value_threshold": 9.5,
+                            "consecutivity_trigger_count": 2,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 20,
+                            "is_muted": true,
+                            "unmute_date": "2025-07-28T08:33:08.674959+00:00",
+                            "last_N_message_values": [
+                                193.7,
+                                193.45,
+                                193.25,
+                                193,
+                                192.7,
+                                192.4
+                            ],
+                            "last_N_message_triggered_status": [
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Reset Detected",
+                            "field": "is first since boot",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 1,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-07-26T19:08:32.200187+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Power Sensor Comms Error",
+                            "field": "power sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Wind Sensor Comms Error",
+                            "field": "wind sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-05-22T18:19:52.640844+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Temperature Sensor 1 Comms Error",
+                            "field": "sst sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-04-14T12:10:04.257846+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "GPS Comms Error",
+                            "field": "gps comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "GPS Fix Error",
+                            "field": "gps fix error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Heading Sensor Comms Error",
+                            "field": "heading sensor comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Heading Sensor Value Error",
+                            "field": "heading sensor value error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "SD Error",
+                            "field": "sd card write error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Aux MCU Comms Error",
+                            "field": "servo mcu comms error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Rudder Stall Detected",
+                            "field": "rudder stall flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-02-02T10:27:20.977776+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Sail Stall Detected",
+                            "field": "sail stall flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ]
+                        },
+                        {
+                            "name": "Rudder Encoder Error",
+                            "field": "rudder encoder error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-01-31T12:46:26.812358+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Sail Encoder Error",
+                            "field": "sail encoder error flag",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-01-31T12:46:31.176265+00:00",
+                            "last_N_message_values": [
+                                0,
+                                0,
+                                0,
+                                0,
+                                0,
+                                0
+                            ],
+                            "last_N_message_triggered_status": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        }
+                    ]
+                }
+            ],
+            "latest_position": {
+                "latitude": 25.65287,
+                "longitude": -66.77328,
+                "timestamp": "2025-10-28T23:14:58+00:00"
+            }
+        },
+        {
+            "name": "PS1",
+            "imei": "301434061017240",
+            "at_sea_status": true,
+            "geofences": {
+                "keep_in_zone": [
+                    [
+                        30.05,
+                        -88.55791913601526
+                    ],
+                    [
+                        30.054235354997406,
+                        -88.55840105778397
+                    ],
+                    [
+                        30.058307947677473,
+                        -88.5598283031068
+                    ],
+                    [
+                        30.062061270587453,
+                        -88.5621460237464
+                    ],
+                    [
+                        30.06535108563279,
+                        -88.56526515099837
+                    ],
+                    [
+                        30.068050967066245,
+                        -88.56906581855166
+                    ],
+                    [
+                        30.07005715995845,
+                        -88.57340196888363
+                    ],
+                    [
+                        30.071292567441628,
+                        -88.57810696616878
+                    ],
+                    [
+                        30.071709713499036,
+                        -88.583
+                    ],
+                    [
+                        30.071292567441628,
+                        -88.58789303383124
+                    ],
+                    [
+                        30.07005715995845,
+                        -88.59259803111638
+                    ],
+                    [
+                        30.068050967066245,
+                        -88.59693418144835
+                    ],
+                    [
+                        30.06535108563279,
+                        -88.60073484900164
+                    ],
+                    [
+                        30.062061270587453,
+                        -88.60385397625362
+                    ],
+                    [
+                        30.058307947677473,
+                        -88.60617169689321
+                    ],
+                    [
+                        30.054235354997406,
+                        -88.60759894221604
+                    ],
+                    [
+                        30.05,
+                        -88.60808086398475
+                    ],
+                    [
+                        30.0457646450026,
+                        -88.60759894221604
+                    ],
+                    [
+                        30.041692052322528,
+                        -88.60617169689321
+                    ],
+                    [
+                        30.03793872941255,
+                        -88.60385397625362
+                    ],
+                    [
+                        30.03464891436721,
+                        -88.60073484900164
+                    ],
+                    [
+                        30.03194903293376,
+                        -88.59693418144835
+                    ],
+                    [
+                        30.029942840041553,
+                        -88.59259803111638
+                    ],
+                    [
+                        30.028707432558374,
+                        -88.58789303383124
+                    ],
+                    [
+                        30.028290286500965,
+                        -88.583
+                    ],
+                    [
+                        30.028707432558374,
+                        -88.57810696616878
+                    ],
+                    [
+                        30.029942840041553,
+                        -88.57340196888363
+                    ],
+                    [
+                        30.03194903293376,
+                        -88.56906581855166
+                    ],
+                    [
+                        30.03464891436721,
+                        -88.56526515099837
+                    ],
+                    [
+                        30.03793872941255,
+                        -88.5621460237464
+                    ],
+                    [
+                        30.041692052322528,
+                        -88.5598283031068
+                    ],
+                    [
+                        30.0457646450026,
+                        -88.55840105778397
+                    ]
+                ],
+                "keep_out_points": [
+                    {
+                        "lat": 30.05,
+                        "lon": -88.583,
+                        "name": "Viking",
+                        "radius": 100
+                    }
+                ],
+                "keep_out_zones": [],
+                "mute_info": {
+                    "keep_in": {
+                        "is_muted": true,
+                        "unmute_date": "2025-05-06T03:45:56.393943+00:00"
+                    },
+                    "keep_out": [
+                        {
+                            "is_muted": false,
+                            "unmute_date": null
+                        }
+                    ],
+                    "keep_out_points": [
+                        {
+                            "is_muted": true,
+                            "unmute_date": "2025-05-06T03:24:40.629999+00:00"
+                        }
+                    ]
+                }
+            },
+            "emergency_alert_status": {
+                "is_active": false,
+                "alert_text": "Vessel outside of keep-in zone",
+                "first_triggered": "2025-05-06T06:36:20.860169+00:00",
+                "last_triggered": "2025-05-08T13:41:46.745681+00:00",
+                "n_repeats": 633,
+                "n_repeats_until_escalation": 3,
+                "last_check_in_time": "2025-05-08T13:46:02.437531+00:00",
+                "repeat_interval_mins": 5,
+                "primary_responders": [
+                    "7672"
+                ],
+                "secondary_responders": []
+            },
+            "message_types": [
+                {
+                    "name": "Format 3",
+                    "decoding_schema_path": "message_format3.json",
+                    "acceptable_time_between_messages": 30,
+                    "acceptable_late_time_mins": 30,
+                    "last_N_message_timestrings": [],
+                    "alert_triggers": [
+                        {
+                            "name": "Heading Error",
+                            "field": "Average Heading Error",
+                            "comparator": "||>=",
+                            "value_threshold": 35,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 0,
+                            "time_trigger_count": 100,
+                            "is_muted": true,
+                            "unmute_date": "2025-05-05T16:28:16.769966+00:00",
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": [],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Low Wind",
+                            "field": "Navigator Wind Speed Average",
+                            "comparator": "<=",
+                            "value_threshold": 3,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 10,
+                            "is_muted": true,
+                            "unmute_date": "2025-02-26T20:50:07.052134+00:00",
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": [],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Velocity",
+                            "field": "Average GPS Speed",
+                            "comparator": ">=",
+                            "value_threshold": 0.15,
+                            "consecutivity_trigger_count": 2,
+                            "time_trigger_period_mins": 30,
+                            "time_trigger_count": 15,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": [],
+                            "consecutivity_enabled": true,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Backwards VMG",
+                            "field": "Average Speed Towards Target Waypoint",
+                            "comparator": "<=",
+                            "value_threshold": 2.0,
+                            "consecutivity_trigger_count": 15,
+                            "time_trigger_period_mins": 30,
+                            "time_trigger_count": 15,
+                            "is_muted": true,
+                            "unmute_date": "2025-02-26T20:50:15.079184+00:00",
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": [],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Backwards VMC",
+                            "field": "Average Speed on Target Heading",
+                            "comparator": "<=",
+                            "value_threshold": 0,
+                            "consecutivity_trigger_count": 5,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 10,
+                            "is_muted": true,
+                            "unmute_date": "2025-02-26T20:50:19.715005+00:00",
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": [],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Dist To WP",
+                            "field": "Distance to Waypoint",
+                            "comparator": ">=",
+                            "value_threshold": 1.0,
+                            "consecutivity_trigger_count": 2,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 20,
+                            "is_muted": true,
+                            "unmute_date": "2025-02-26T20:50:23.897004+00:00",
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": [],
+                            "consecutivity_enabled": true,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Reset Detected",
+                            "field": "First Message Since Reset",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 1,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-04-14T12:09:42.929770+00:00",
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": [],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Power Sensor Comms Error",
+                            "field": "Power Sensor Comms Error",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": [],
+                            "consecutivity_enabled": true,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Wind Sensor Comms Error",
+                            "field": "Wind Sensor Comms Error",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": [],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Temperature Sensor 1 Comms Error",
+                            "field": "Temperature Sensor 1 Comms Error",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-03-02T03:28:20.506696+00:00",
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": [],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Temperature Sensor 2 Comms Error",
+                            "field": "Temperature Sensor 2 Comms Error",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-03-02T03:28:24.720386+00:00",
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": [],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "GPS Comms Error",
+                            "field": "GPS Comms Error",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": []
+                        },
+                        {
+                            "name": "GPS Fix Error",
+                            "field": "GPS Fix Error",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": []
+                        },
+                        {
+                            "name": "Heading Sensor Comms Error",
+                            "field": "Heading Sensor Comms Error",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": []
+                        },
+                        {
+                            "name": "Heading Sensor Value Error",
+                            "field": "Heading Sensor Value Error",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": []
+                        },
+                        {
+                            "name": "SD Error",
+                            "field": "SD Error",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": []
+                        },
+                        {
+                            "name": "Aux MCU Comms Error",
+                            "field": "Aux MCU Comms Error",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": []
+                        },
+                        {
+                            "name": "Rudder Stall Detected",
+                            "field": "Rudder Stall Detected",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-02-02T10:27:20.977776+00:00",
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": []
+                        },
+                        {
+                            "name": "Sail Stall Detected",
+                            "field": "Sail Stall Detected",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": false,
+                            "unmute_date": null,
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": []
+                        },
+                        {
+                            "name": "Rudder Encoder Error",
+                            "field": "Rudder Encoder Error",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-01-31T12:46:26.812358+00:00",
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": [],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        },
+                        {
+                            "name": "Sail Encoder Error",
+                            "field": "Sail Encoder Error",
+                            "comparator": "==",
+                            "value_threshold": 1,
+                            "consecutivity_trigger_count": 3,
+                            "time_trigger_period_mins": 20,
+                            "time_trigger_count": 3,
+                            "is_muted": true,
+                            "unmute_date": "2025-01-31T12:46:31.176265+00:00",
+                            "last_N_message_values": [],
+                            "last_N_message_triggered_status": [],
+                            "consecutivity_enabled": false,
+                            "time_enabled": false
+                        }
+                    ]
+                }
+            ],
+            "latest_position": {
+                "latitude": 30.363430000000008,
+                "longitude": -89.09737,
+                "timestamp": "2025-05-07T14:59:01+00:00"
+            }
+        }
+    ],
+    "last_updated": "2025-10-28T23:20:46.831875+00:00"
+}
