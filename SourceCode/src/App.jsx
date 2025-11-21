@@ -1,9 +1,16 @@
-import logo from './logo.svg';
+import logo from './Oshen_logo.png';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
+      <div style={{
+        backgroundColor: 'black',
+        height: '70px',
+        width: '100%'
+      }}
+      ></div>
+
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
@@ -19,6 +26,7 @@ function App() {
         </a>
       </header>
     </div>
+    
   );
 }
 
