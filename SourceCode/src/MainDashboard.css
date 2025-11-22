@@ -24,12 +24,13 @@
   align-items: center;
   display: flex; 
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 5px;
 }
+/* Passes the style elements of the black bar into the jsx */
 
 .buttons {
   display: flex;
-  gap: 20px;
+  gap: 0px;
 }
 
 .buttons button{
@@ -38,7 +39,8 @@
   border: none;
   height: 40px;
   width: auto;
-  padding: 0 15px;
+  padding: 0 50px;
   border-radius: pointer;
-  right: 300px;
+  right: 200px;
 }
+/* This lets me specify features about all of the buttons */
