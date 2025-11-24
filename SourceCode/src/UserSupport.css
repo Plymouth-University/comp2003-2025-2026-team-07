@@ -42,5 +42,11 @@
   padding: 0 50px;
   border-radius: pointer;
   right: 200px;
+  transition: background-color 0.5s ease;
 }
 /* This lets me specify features about all of the buttons */
+
+.buttons button:hover {
+  background-color: #9e3030;
+  cursor: pointer;
+}
