@@ -1,19 +1,44 @@
+import { useState } from 'react';
 import logo from './Oshen_logo.png';
 import './MainDashboard.css';
+import Cstar from './Cstar';
+import Geofences from './Geofences';
+import UserSupport from './UserSupport';
+import Settings from './Settings';
 
 function MainDashboard() {
+  const [activeTab, setActiveTab] = useState('cstars');
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'cstars':
+        return <Cstar />;
+      case 'geofences':
+        return <Geofences />;
+      case 'usersupport':
+        return <UserSupport />;
+      case 'settings':
+        return <Settings />;
+      default:
+        return <Cstar />;
+    }
+  };
+
   return (
     <div className='dashboard_container'>
       <div className="black_bar">
         <div className='logo'>
-          <img src={logo} alt="Oshen Logo" className='logo'/>
+          <img src={logo} alt="Oshen Logo" className='logo' />
         </div>
         <div className='buttons'>
-          <button>Cstars</button>
-          <button>Geofences</button>
-          <button>User support</button>
+          <button onClick={() => setActiveTab('cstars')} className={activeTab === 'cstars' ? 'active' : ''}>Cstars</button>
+          <button onClick={() => setActiveTab('geofences')} className={activeTab === 'geofences' ? 'active' : ''}>Geofences</button>
+          <button onClick={() => setActiveTab('usersupport')} className={activeTab === 'usersupport' ? 'active' : ''}>User support</button>
+          <button onClick={() => setActiveTab('settings')} className={activeTab === 'settings' ? 'active' : ''}>Settings</button>
         </div>
-      
+      </div>
+      <div className="content_area">
+        {renderContent()}
       </div>
     </div>
   );
