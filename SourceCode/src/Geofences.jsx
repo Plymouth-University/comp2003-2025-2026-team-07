@@ -13,7 +13,7 @@ function Geofences() {
 
     if (map_instance.current) return;
 
-    map_instance.current = L.map(reference_map.current).setView([75, -0.5], 16);
+    map_instance.current = L.map(reference_map.current).setView([50.374367, -4.140709], 16);
     // This creates the map instance, setting the view and zoom level as well
 
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
