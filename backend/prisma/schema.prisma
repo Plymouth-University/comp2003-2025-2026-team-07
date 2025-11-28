@@ -29,22 +29,24 @@ model alert_evaluations {
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model alert_history {
-  id                 Int          @id @default(autoincrement())
-  vessel_id          Int
-  alert_rule_id      Int?
-  alert_text         String
-  first_triggered_at DateTime     @db.Timestamptz(6)
-  last_triggered_at  DateTime     @db.Timestamptz(6)
-  repeat_count       Int          @default(0)
-  status             String       @default("active") @db.VarChar(20)
-  acknowledged_by    Int?
-  acknowledged_at    DateTime?    @db.Timestamptz(6)
-  resolved_at        DateTime?    @db.Timestamptz(6)
-  pagem_sent         Boolean      @default(false)
-  pagem_sent_at      DateTime?    @db.Timestamptz(6)
-  users              users?       @relation(fields: [acknowledged_by], references: [id], onUpdate: NoAction)
-  alert_rules        alert_rules? @relation(fields: [alert_rule_id], references: [id], onUpdate: NoAction)
-  vessels            vessels      @relation(fields: [vessel_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  id                                     Int          @id @default(autoincrement())
+  vessel_id                              Int
+  alert_rule_id                          Int?
+  alert_text                             String
+  first_triggered_at                     DateTime     @db.Timestamptz(6)
+  last_triggered_at                      DateTime     @db.Timestamptz(6)
+  repeat_count                           Int          @default(0)
+  status                                 String       @default("active") @db.VarChar(20)
+  acknowledged_by                        Int?
+  acknowledged_at                        DateTime?    @db.Timestamptz(6)
+  resolved_at                            DateTime?    @db.Timestamptz(6)
+  pagem_sent                             Boolean      @default(false)
+  pagem_sent_at                          DateTime?    @db.Timestamptz(6)
+  resolved_by                            Int?
+  users                                  users?       @relation(fields: [acknowledged_by], references: [id], onUpdate: NoAction)
+  alert_rules                            alert_rules? @relation(fields: [alert_rule_id], references: [id], onUpdate: NoAction)
+  vessels                                vessels      @relation(fields: [vessel_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users_alert_history_resolved_byTousers users?       @relation("alert_history_resolved_byTousers", fields: [resolved_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_alert_history_resolved_by")
 
   @@index([first_triggered_at(sort: Desc)], map: "idx_alert_history_first_triggered")
   @@index([last_triggered_at(sort: Desc)], map: "idx_alert_history_last_triggered")
@@ -52,6 +54,7 @@ model alert_history {
   @@index([status], map: "idx_alert_history_status")
   @@index([vessel_id], map: "idx_alert_history_vessel")
   @@index([vessel_id, status], map: "idx_alert_history_vessel_status")
+  @@index([resolved_by], map: "idx_alert_history_resolved_by")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -109,7 +112,7 @@ model geofences {
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model message_types {
   id                     Int                    @id @default(autoincrement())
-  name                   String                 @db.VarChar(100)
+  name                   String                 @unique(map: "unique_message_type_name") @db.VarChar(100)
   schema_path            String?                @db.VarChar(255)
   expected_interval_mins Int                    @default(30)
   late_threshold_mins    Int                    @default(30)
@@ -163,6 +166,7 @@ model users {
   created_at                                     DateTime        @default(now()) @db.Timestamptz(6)
   last_login_at                                  DateTime?       @db.Timestamptz(6)
   alert_history                                  alert_history[]
+  alert_history_alert_history_resolved_byTousers alert_history[] @relation("alert_history_resolved_byTousers")
   vessels_vessels_primary_supervisor_idTousers   vessels[]       @relation("vessels_primary_supervisor_idTousers")
   vessels_vessels_secondary_supervisor_idTousers vessels[]       @relation("vessels_secondary_supervisor_idTousers")
 
