@@ -1,6 +1,6 @@
 import './Geofences.css';
-import React, {useEffect, useRef} from 'react'; 
-import L from 'leaflet';
+import React, {useEffect, useRef, useState} from 'react'; 
+import L, { map } from 'leaflet';
 
 
 function Geofences() {
@@ -8,6 +8,10 @@ function Geofences() {
   // Stores a refernce, so it can be placed later
   const map_instance = useRef(null);
   // Stores the map instance
+  const [geofence_points, set_geofence_points] = useState([]);
+  // This will allow thw coordinates of the geofence to be stored
+  const reference_geofence = useRef(null);
+  // Stores the Geofence made
 
   useEffect(() => {
 
@@ -21,10 +25,27 @@ function Geofences() {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       // This references the original source (where the map came from)
     }).addTo(map_instance.current);
-    
 
+    map_instance.current.on('click', function(e) {
+      const {lat, lng} = e.latlng
+      L.marker([lat, lng]).addTo(map_instance.current);
+      set_geofence_points(previous_points => [...previous_points, [lat, lng]]);
+      // Adds a marker to indicate a point of the geofence
+    });
 
   }, []);
+
+  useEffect(() => {
+    if (geofence_points.length >= 4) {
+      reference_geofence.current = L.polygon( geofence_points, {
+        // Adds a point and the attributes of the geofence are below
+        color: 'yellow',
+        fillColor: 'yellow',
+        fillOpacity: 0.5,
+        weight: 3,
+      }).addTo(map_instance.current);
+    }
+  }, [geofence_points]);
 
   return(
     <div className='content_container'>
