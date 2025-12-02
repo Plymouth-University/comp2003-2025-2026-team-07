@@ -19,6 +19,8 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  cursor: pointer;
+  /* Added to indicate clickability */
 }
 
 .vessel_card:hover {
@@ -89,4 +91,87 @@
 .detail_value {
   font-family: 'Courier New', monospace;
   color: #e0e0e0;
+}
+
+/* Modal Styles */
+.modal_overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal_content {
+  background-color: #1e1e1e;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.3s ease-out;
+}
+
+.modal_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 15px;
+}
+
+.modal_header h2 {
+  margin: 0;
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.close_button {
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.close_button:hover {
+  color: #fff;
+}
+
+.input_readonly {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #888;
+  cursor: not-allowed;
+}
+
+.checkbox_label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #e0e0e0;
+  cursor: pointer;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }

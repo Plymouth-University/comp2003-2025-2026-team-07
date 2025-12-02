@@ -1,61 +1,77 @@
+// src/Cstar.jsx - FIXED VERSION WITH PROPER TEMPLATE LITERALS
 import React, { useState, useEffect } from 'react';
+import api from './services/api';
 import './Cstar.css';
 
 function Cstar() {
-  // Mock data for vessels
   const [vessels, setVessels] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Simulating API fetch
-    const mockVessels = [
-      {
-        id: 1,
-        name: 'Ocean Explorer',
-        imei: '867530901234567',
-        status: 'safe',
-        latitude: 50.3755,
-        longitude: -4.1427,
-        lastUpdate: '2 mins ago'
-      },
-      {
-        id: 2,
-        name: 'Sea Guardian',
-        imei: '998877665544332',
-        status: 'alert',
-        latitude: 49.9876,
-        longitude: -5.1234,
-        lastUpdate: 'Just now'
-      },
-      {
-        id: 3,
-        name: 'Coastal Ranger',
-        imei: '112233445566778',
-        status: 'safe',
-        latitude: 50.1234,
-        longitude: -3.9876,
-        lastUpdate: '15 mins ago'
-      },
-      {
-        id: 4,
-        name: 'Deep Blue',
-        imei: '556677889900112',
-        status: 'offline',
-        latitude: 48.5678,
-        longitude: -6.7890,
-        lastUpdate: '2 hours ago'
-      },
-      {
-        id: 5,
-        name: 'Arctic Star',
-        imei: '123450987654321',
-        status: 'safe',
-        latitude: 51.5074,
-        longitude: -0.1278,
-        lastUpdate: '5 mins ago'
-      }
-    ];
-    setVessels(mockVessels);
+    loadVessels();
+    // Refresh every 30 seconds
+    const interval = setInterval(loadVessels, 30000);
+    return () => clearInterval(interval);
   }, []);
+
+  const loadVessels = async () => {
+    try {
+      setError(null);
+      const response = await api.getVessels();
+      
+      // Transform backend data to match card format
+      const transformedVessels = response.data.map(vessel => ({
+        id: vessel.id,
+        name: vessel.name,
+        imei: vessel.imei,
+        status: getVesselStatus(vessel),
+        latitude: vessel.latest_position?.latitude || 0,
+        longitude: vessel.latest_position?.longitude || 0,
+        lastUpdate: getLastUpdateText(vessel.last_check_in_at),
+        emergency: vessel.emergency_alert_active
+      }));
+      
+      setVessels(transformedVessels);
+    } catch (err) {
+      console.error('Error loading vessels:', err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getVesselStatus = (vessel) => {
+    if (vessel.emergency_alert_active) return 'alert';
+    if (!vessel.at_sea_status) return 'offline';
+    if (!vessel.last_check_in_at) return 'offline';
+    
+    // Check if last check-in was more than 1 hour ago
+    const lastCheckIn = new Date(vessel.last_check_in_at);
+    const now = new Date();
+    const hoursSinceCheckIn = (now - lastCheckIn) / (1000 * 60 * 60);
+    
+    if (hoursSinceCheckIn > 1) return 'offline';
+    return 'safe';
+  };
+
+  const getLastUpdateText = (timestamp) => {
+    if (!timestamp) return 'Never';
+    
+    const lastUpdate = new Date(timestamp);
+    const now = new Date();
+    const diffMs = now - lastUpdate;
+    const diffMins = Math.floor(diffMs / 60000);
+    
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
+    
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    
+    const diffDays = Math.floor(diffHours / 24);
+    return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+  };
 
   const getStatusClass = (status) => {
     switch (status) {
@@ -66,12 +82,38 @@ function Cstar() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className='content_container'>
+        <div className="loading_message">🔄 Loading vessels from backend...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className='content_container'>
+        <div className="error_message">
+          <h3>⚠️ Backend Connection Error</h3>
+          <p>{error}</p>
+          <p style={{ marginTop: '15px', fontSize: '0.9rem' }}>Make sure:</p>
+          <ul style={{ textAlign: 'left', marginTop: '10px', display: 'inline-block' }}>
+            <li>Backend server is running (check Alvin's machine)</li>
+            <li>ngrok tunnel is active</li>
+            <li>API URL is correct in api.js</li>
+          </ul>
+          <button onClick={loadVessels}>🔄 Retry Connection</button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className='content_container'>
       <div className="vessel_header" style={{ borderBottom: 'none' }}>
         <h1>Fleet Dashboard</h1>
         <div className="status_badge status_safe" style={{ fontSize: '1rem' }}>
-          Active Vessels: {vessels.filter(v => v.status !== 'offline').length}
+          Active Vessels: {vessels.filter(v => v.status !== 'offline').length} / {vessels.length}
         </div>
       </div>
 
@@ -82,6 +124,7 @@ function Cstar() {
               <h3 className="vessel_name">{vessel.name}</h3>
               <span className={`status_badge ${getStatusClass(vessel.status)}`}>
                 {vessel.status}
+                {vessel.emergency && ' 🚨'}
               </span>
             </div>
             <div className="vessel_details">
@@ -91,7 +134,11 @@ function Cstar() {
               </div>
               <div className="detail_row">
                 <span className="detail_label">Location:</span>
-                <span className="detail_value">{vessel.latitude.toFixed(4)}, {vessel.longitude.toFixed(4)}</span>
+                <span className="detail_value">
+                  {vessel.latitude && vessel.longitude
+                    ? `${vessel.latitude.toFixed(4)}, ${vessel.longitude.toFixed(4)}`
+                    : 'No position data'}
+                </span>
               </div>
               <div className="detail_row">
                 <span className="detail_label">Last Update:</span>
@@ -101,6 +148,12 @@ function Cstar() {
           </div>
         ))}
       </div>
+
+      {vessels.length === 0 && (
+        <div className="no_vessels_message">
+          <p>No vessels found in the system.</p>
+        </div>
+      )}
     </div>
   );
 }

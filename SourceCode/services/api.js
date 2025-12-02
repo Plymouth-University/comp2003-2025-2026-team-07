@@ -1,4 +1,3 @@
-// src/services/api.js
 const API_BASE_URL = 'https://ares-swirlier-yulanda.ngrok-free.dev/api';
 
 class ApiService {
@@ -31,13 +30,13 @@ class ApiService {
       ...options,
       headers: {
         'Content-Type': 'application/json',
-        ...(token && { Authorization: `Bearer ${token}` }),
+        ...(token && { Authorization: 'Bearer ' + token }),
         ...options.headers,
       },
     };
 
     try {
-      const response = await fetch(`${this.baseUrl}${endpoint}`, config);
+      const response = await fetch(this.baseUrl + endpoint, config);
       const data = await response.json();
 
       if (!response.ok) {
@@ -77,11 +76,11 @@ class ApiService {
   }
 
   async getVessel(id) {
-    return this.request(`/vessels/${id}`);
+    return this.request('/vessels/' + id);
   }
 
   async getVesselStats(id) {
-    return this.request(`/vessels/${id}/stats`);
+    return this.request('/vessels/' + id + '/stats');
   }
 
   async getGeofences() {
@@ -89,12 +88,12 @@ class ApiService {
   }
 
   async getGeofencesByVessel(vesselId) {
-    return this.request(`/geofences/vessel/${vesselId}`);
+    return this.request('/geofences/vessel/' + vesselId);
   }
 
   async getAlertRules(filters = {}) {
     const params = new URLSearchParams(filters);
-    return this.request(`/alerts/rules?${params}`);
+    return this.request('/alerts/rules?' + params);
   }
 
   async getActiveAlerts() {
@@ -103,27 +102,27 @@ class ApiService {
 
   async getAlertHistory(filters = {}) {
     const params = new URLSearchParams(filters);
-    return this.request(`/alerts/history?${params}`);
+    return this.request('/alerts/history?' + params);
   }
 
   async acknowledgeAlert(id) {
-    return this.request(`/alerts/${id}/acknowledge`, {
+    return this.request('/alerts/' + id + '/acknowledge', {
       method: 'POST',
     });
   }
 
   async resolveAlert(id) {
-    return this.request(`/alerts/${id}/resolve`, {
+    return this.request('/alerts/' + id + '/resolve', {
       method: 'POST',
     });
   }
 
   async getLatestTelemetry(vesselId) {
-    return this.request(`/telemetry/vessel/${vesselId}/latest`);
+    return this.request('/telemetry/vessel/' + vesselId + '/latest');
   }
 
   async getTelemetryHistory(vesselId, limit = 50) {
-    return this.request(`/telemetry?vessel_id=${vesselId}&limit=${limit}`);
+    return this.request('/telemetry?vessel_id=' + vesselId + '&limit=' + limit);
   }
 }
 

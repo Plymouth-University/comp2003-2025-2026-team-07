@@ -1,11 +1,33 @@
-/* Inherits global styles from MainDashboard.css */
-.content_container {
-  animation: fadeIn 0.5s ease-out;
-}
+/* src/Geofences.css */
 
 #geofence_map {
-  height: 600px;
+  height: calc(100vh - 200px);
   width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.leaflet-container {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+}
+
+.leaflet-popup-content-wrapper {
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: rgba(30, 30, 30, 0.95);
+  color: #ffffff;
+}
+
+.leaflet-popup-content {
+  margin: 12px;
+  line-height: 1.6;
+  color: #ffffff;
+}
+
+.leaflet-popup-tip {
+  background-color: rgba(30, 30, 30, 0.95);
+}
+
+.content_container h1 {
+  margin-bottom: 15px;
+  color: #ffffff;
 }
