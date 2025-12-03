@@ -1,8 +1,8 @@
 // src/Login.jsx
 import React, { useState } from 'react';
-import api from './services/api';
-import logo from './Oshen_logo.png';
-import './Login.css';
+import api from './api';
+import logo from '../Oshen_logo.png';
+import './login.css';
 
 function Login({ onLoginSuccess }) {
   const [username, setUsername] = useState('');
