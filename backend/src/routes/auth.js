@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const { prisma } = require('../config/database');
-const { 
-  generateToken, 
-  authenticateToken, 
+const {
+  generateToken,
+  authenticateToken,
   requireAdmin,
+  requireSupervisor,
   hashPassword,
-  comparePassword 
+  comparePassword
 } = require('../middleware/auth');
 
 // POST /api/auth/login - User login
@@ -175,8 +176,8 @@ router.put('/password', authenticateToken, async (req, res, next) => {
   }
 });
 
-// GET /api/auth/users - Get all users (Admin only)
-router.get('/users', authenticateToken, requireAdmin, async (req, res, next) => {
+// GET /api/auth/users - Get all users (Admin or Supervisor)
+router.get('/users', authenticateToken, requireSupervisor, async (req, res, next) => {
   try {
     const users = await prisma.users.findMany({
       select: {

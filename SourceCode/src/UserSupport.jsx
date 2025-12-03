@@ -10,14 +10,16 @@ function UserSupport({ currentUser }) {
   const [error, setError] = useState(null);
 
   const isAdmin = currentUser && currentUser.role === 'admin';
+  const isSupervisor = currentUser && currentUser.role === 'supervisor';
+  const canViewUsers = isAdmin || isSupervisor;
 
   useEffect(() => {
-    if (isAdmin) {
+    if (canViewUsers) {
       loadUsers();
     } else {
       setLoading(false);
     }
-  }, [isAdmin]);
+  }, [canViewUsers]);
 
   const loadUsers = async () => {
     try {
@@ -82,14 +84,14 @@ function UserSupport({ currentUser }) {
     );
   }
 
-  if (!isAdmin) {
+  if (!canViewUsers) {
     return (
       <div className='content_container'>
         <div className="user_header">
           <div>
             <h1>User Management</h1>
             <p style={{ color: '#f44336', margin: '5px 0 0 0' }}>
-              ⚠️ Admin access required to view and manage users
+              ⚠️ Supervisor or Admin access required to view users
             </p>
           </div>
         </div>
@@ -103,12 +105,14 @@ function UserSupport({ currentUser }) {
         <div>
           <h1>User Management</h1>
           <p style={{ color: '#a0a0a0', margin: '5px 0 0 0' }}>
-            Manage team access and roles
+            {isAdmin ? 'Manage team access and roles' : 'View team members (read-only)'}
           </p>
         </div>
-        <button className="btn_primary" onClick={() => setShowModal(true)}>
-          + Add User
-        </button>
+        {isAdmin && (
+          <button className="btn_primary" onClick={() => setShowModal(true)}>
+            + Add User
+          </button>
+        )}
       </div>
 
       {error && (
@@ -132,7 +136,7 @@ function UserSupport({ currentUser }) {
               <th>Email</th>
               <th>Role</th>
               <th>Pager ID</th>
-              <th>Actions</th>
+              {isAdmin && <th>Actions</th>}
             </tr>
           </thead>
           <tbody>
@@ -160,23 +164,25 @@ function UserSupport({ currentUser }) {
                     </span>
                   </td>
                   <td style={{ fontFamily: 'monospace' }}>{user.pager_id || '-'}</td>
-                  <td>
-                    {!isCurrentUser ? (
-                      <>
-                        {/* <button className="action_btn">Edit</button> */}
-                        <button
-                          className="action_btn delete"
-                          onClick={() => handleDeleteUser(user.id)}
-                        >
-                          Delete
-                        </button>
-                      </>
-                    ) : (
-                      <span style={{ color: '#757575', fontSize: '0.9rem' }}>
-                        Cannot delete self
-                      </span>
-                    )}
-                  </td>
+                  {isAdmin && (
+                    <td>
+                      {!isCurrentUser ? (
+                        <>
+                          {/* <button className="action_btn">Edit</button> */}
+                          <button
+                            className="action_btn delete"
+                            onClick={() => handleDeleteUser(user.id)}
+                          >
+                            Delete
+                          </button>
+                        </>
+                      ) : (
+                        <span style={{ color: '#757575', fontSize: '0.9rem' }}>
+                          Cannot delete self
+                        </span>
+                      )}
+                    </td>
+                  )}
                 </tr>
               );
             })}
