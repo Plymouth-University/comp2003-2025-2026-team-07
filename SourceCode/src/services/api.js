@@ -25,18 +25,26 @@ class ApiService {
 
   async request(endpoint, options = {}) {
     const token = this.getToken();
-    
+
     const config = {
       ...options,
       headers: {
         'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': 'true',
         ...(token && { Authorization: 'Bearer ' + token }),
         ...options.headers,
       },
     };
 
     try {
+      console.log('Making request to:', this.baseUrl + endpoint);
+      console.log('Request config:', config);
+
       const response = await fetch(this.baseUrl + endpoint, config);
+
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+
       const data = await response.json();
 
       if (!response.ok) {
@@ -49,7 +57,16 @@ class ApiService {
 
       return data;
     } catch (error) {
-      console.error('API Error:', error);
+      console.error('API Error Details:', {
+        message: error.message,
+        endpoint: this.baseUrl + endpoint,
+        error: error
+      });
+
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        throw new Error('Network error - Cannot connect to backend. Check if backend is running.');
+      }
+
       throw error;
     }
   }
