@@ -16,7 +16,7 @@ function MainDashboard({ user, onLogout }) {
       case 'geofences':
         return <Geofences />;
       case 'usersupport':
-        return <UserSupport />;
+        return <UserSupport currentUser={user} />;
       case 'settings':
         return <Settings />;
       default:

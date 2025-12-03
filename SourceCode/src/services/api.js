@@ -141,6 +141,28 @@ class ApiService {
   async getTelemetryHistory(vesselId, limit = 50) {
     return this.request('/telemetry?vessel_id=' + vesselId + '&limit=' + limit);
   }
+
+  // User Management APIs
+  async getCurrentUser() {
+    return this.request('/auth/me');
+  }
+
+  async getAllUsers() {
+    return this.request('/auth/users');
+  }
+
+  async createUser(userData) {
+    return this.request('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(userData)
+    });
+  }
+
+  async deleteUser(userId) {
+    return this.request('/auth/users/' + userId, {
+      method: 'DELETE'
+    });
+  }
 }
 
 export default new ApiService();

@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './Forms.css';
 
 function UserForm({ onCancel, onSave }) {
     const [formData, setFormData] = useState({
-        name: '',
+        username: '',
         email: '',
-        role: 'Viewer',
-        pagerId: ''
+        password: '',
+        role: 'supervisor',
+        pager_id: ''
     });
 
     const handleChange = (e) => {
@@ -19,6 +20,11 @@ function UserForm({ onCancel, onSave }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        // Validate password length
+        if (formData.password.length < 6) {
+            alert('Password must be at least 6 characters long');
+            return;
+        }
         onSave(formData);
     };
 
@@ -27,28 +33,45 @@ function UserForm({ onCancel, onSave }) {
             <h2 style={{ marginTop: 0, marginBottom: '20px', color: '#fff' }}>Add New User</h2>
             <form onSubmit={handleSubmit}>
                 <div className="form_group">
-                    <label htmlFor="name">Full Name</label>
+                    <label htmlFor="username">Username</label>
                     <input
                         type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
+                        id="username"
+                        name="username"
+                        value={formData.username}
                         onChange={handleChange}
                         required
-                        placeholder="John Doe"
+                        placeholder="johndoe"
+                        autoComplete="off"
                     />
                 </div>
 
                 <div className="form_group">
                     <label htmlFor="email">Email Address</label>
                     <input
-                        type="text"
+                        type="email"
                         id="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
                         required
                         placeholder="john@example.com"
+                        autoComplete="off"
+                    />
+                </div>
+
+                <div className="form_group">
+                    <label htmlFor="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                        placeholder="Minimum 6 characters"
+                        autoComplete="new-password"
+                        minLength={6}
                     />
                 </div>
 
@@ -60,21 +83,22 @@ function UserForm({ onCancel, onSave }) {
                         value={formData.role}
                         onChange={handleChange}
                     >
-                        <option value="Admin">Admin</option>
-                        <option value="Supervisor">Supervisor</option>
-                        <option value="Viewer">Viewer</option>
+                        <option value="admin">Admin</option>
+                        <option value="supervisor">Supervisor</option>
+                        <option value="viewer">Viewer</option>
                     </select>
                 </div>
 
                 <div className="form_group">
-                    <label htmlFor="pagerId">Pager ID</label>
+                    <label htmlFor="pager_id">Pager ID</label>
                     <input
                         type="text"
-                        id="pagerId"
-                        name="pagerId"
-                        value={formData.pagerId}
+                        id="pager_id"
+                        name="pager_id"
+                        value={formData.pager_id}
                         onChange={handleChange}
-                        placeholder="Optional"
+                        required
+                        placeholder="e.g., 99001"
                     />
                 </div>
 
