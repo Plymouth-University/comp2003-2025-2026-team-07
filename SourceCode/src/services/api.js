@@ -100,6 +100,26 @@ class ApiService {
     return this.request('/vessels/' + id + '/stats');
   }
 
+  async createVessel(vesselData) {
+    return this.request('/vessels', {
+      method: 'POST',
+      body: JSON.stringify(vesselData)
+    });
+  }
+
+  async updateVessel(id, vesselData) {
+    return this.request('/vessels/' + id, {
+      method: 'PUT',
+      body: JSON.stringify(vesselData)
+    });
+  }
+
+  async deleteVessel(id) {
+    return this.request('/vessels/' + id, {
+      method: 'DELETE'
+    });
+  }
+
   async getGeofences() {
     return this.request('/geofences');
   }
