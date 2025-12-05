@@ -1,5 +1,6 @@
 const { prisma } = require('../config/database');
 const oshenApiClient = require('./oshenApiClient');
+const alertEvaluator = require('./alertEvaluator');
 
 /**
  * Background service that fetches live data from Oshen API
@@ -41,7 +42,7 @@ class DataFetcherService {
       }
 
       // Create telemetry entry
-      await prisma.telemetry.create({
+      const telemetryEntry = await prisma.telemetry.create({
         data: {
           vessel_id: vesselId,
           message_type_id: messageTypeId,
@@ -69,6 +70,15 @@ class DataFetcherService {
       }
 
       console.log(`✅ Stored telemetry for vessel ${vesselId} (${vessel?.name})`);
+
+      // Evaluate alert rules against this new telemetry
+      try {
+        await alertEvaluator.evaluateTelemetry(telemetryEntry.id);
+      } catch (error) {
+        console.error(`⚠️  Error evaluating alerts for telemetry ${telemetryEntry.id}:`, error.message);
+        // Don't fail the whole operation if alert evaluation fails
+      }
+
       return true;
     } catch (error) {
       console.error(`❌ Error storing telemetry for vessel ${vesselId}:`, error.message);
