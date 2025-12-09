@@ -281,8 +281,8 @@ function Cstar() {
 
       {/* Vessel Details Modal */}
       {selectedVessel && (
-        <div className="modal_overlay" onClick={handleCloseModal}>
-          <div className="modal_content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '800px' }}>
+        <div className="modal_overlay" onClick={handleCloseModal} onWheel={(e) => e.stopPropagation()}>
+          <div className="modal_content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '800px', maxHeight: '90vh', display: 'flex', flexDirection: 'column' }}>
             <div className="modal_header">
               <div>
                 <h2>{selectedVessel.name}</h2>
@@ -293,7 +293,7 @@ function Cstar() {
               <button onClick={handleCloseModal} style={{ fontSize: '24px', background: 'none', border: 'none', cursor: 'pointer' }}>×</button>
             </div>
 
-            <div style={{ padding: '20px' }}>
+            <div style={{ padding: '20px', overflowY: 'auto', flex: 1 }}>
               <div style={{ marginBottom: '20px', display: 'flex', gap: '10px', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h3>Alert Rules ({vesselAlertRules.length})</h3>
                 <div style={{ display: 'flex', gap: '10px' }}>
@@ -372,28 +372,29 @@ function Cstar() {
 
       {/* Copy Rules Modal */}
       {showCopyToVessel && (
-        <div className="modal_overlay" onClick={() => setShowCopyToVessel(false)} style={{ zIndex: 1001 }}>
-          <div className="modal_content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '500px', padding: '30px' }}>
-            <h2 style={{ marginTop: 0, marginBottom: '10px' }}>Copy Alert Rules</h2>
-            <p style={{ color: '#a0a0a0', marginBottom: '25px' }}>
+        <div className="modal_overlay" onClick={() => setShowCopyToVessel(false)} onWheel={(e) => e.stopPropagation()} style={{ zIndex: 1001 }}>
+          <div className="modal_content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '700px', padding: '40px' }}>
+            <h2 style={{ marginTop: 0, marginBottom: '15px', fontSize: '28px' }}>Copy Alert Rules</h2>
+            <p style={{ color: '#a0a0a0', marginBottom: '30px', fontSize: '18px' }}>
               Copy {vesselAlertRules.length} alert rules from <strong>{selectedVessel.name}</strong> to another vessel
             </p>
 
-            <div style={{ marginBottom: '25px' }}>
-              <label style={{ display: 'block', marginBottom: '10px', fontSize: '16px', fontWeight: '500' }}>
+            <div style={{ marginBottom: '30px' }}>
+              <label style={{ display: 'block', marginBottom: '15px', fontSize: '20px', fontWeight: '600' }}>
                 Select Target Vessel:
               </label>
               <select
                 id="targetVessel"
                 style={{
                   width: '100%',
-                  padding: '15px',
+                  padding: '20px',
                   borderRadius: '8px',
-                  border: '2px solid #ccc',
-                  fontSize: '16px',
+                  border: '2px solid #2196F3',
+                  fontSize: '20px',
                   backgroundColor: '#fff',
                   cursor: 'pointer'
                 }}
+                size="6"
                 onChange={(e) => {
                   if (e.target.value) {
                     handleCopyRulesToSelectedVessel(e.target.value);
@@ -401,11 +402,11 @@ function Cstar() {
                 }}
                 disabled={copyingRules}
               >
-                <option value="">-- Select a vessel --</option>
+                <option value="" style={{ fontSize: '20px', padding: '15px' }}>-- Select a vessel --</option>
                 {vessels
                   .filter(v => v.id !== selectedVessel.id)
                   .map(vessel => (
-                    <option key={vessel.id} value={vessel.id}>
+                    <option key={vessel.id} value={vessel.id} style={{ fontSize: '20px', padding: '15px' }}>
                       {vessel.name} (IMEI: {vessel.imei})
                     </option>
                   ))}
@@ -414,25 +415,26 @@ function Cstar() {
 
             {copyingRules && (
               <div style={{
-                padding: '15px',
+                padding: '20px',
                 backgroundColor: 'rgba(33, 150, 243, 0.1)',
-                border: '1px solid #2196F3',
+                border: '2px solid #2196F3',
                 borderRadius: '8px',
-                marginBottom: '20px',
+                marginBottom: '25px',
                 color: '#2196F3',
                 textAlign: 'center',
-                fontSize: '16px'
+                fontSize: '20px',
+                fontWeight: '600'
               }}>
                 🔄 Copying rules...
               </div>
             )}
 
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+            <div style={{ display: 'flex', gap: '15px', justifyContent: 'flex-end' }}>
               <button
                 className="btn_secondary"
                 onClick={() => setShowCopyToVessel(false)}
                 disabled={copyingRules}
-                style={{ padding: '12px 24px', fontSize: '16px' }}
+                style={{ padding: '15px 30px', fontSize: '18px' }}
               >
                 Cancel
               </button>
@@ -443,8 +445,8 @@ function Cstar() {
 
       {/* Alert Builder Modal */}
       {showAlertBuilder && (
-        <div className="modal_overlay" onClick={handleAlertBuilderCancel}>
-          <div className="modal_content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '600px' }}>
+        <div className="modal_overlay" onClick={handleAlertBuilderCancel} onWheel={(e) => e.stopPropagation()}>
+          <div className="modal_content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto' }}>
             <AlertBuilder
               vessel={selectedVessel}
               existingRule={editingRule}
