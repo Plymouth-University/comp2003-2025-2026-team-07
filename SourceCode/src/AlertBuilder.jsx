@@ -1,15 +1,35 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Forms.css';
+import api from './services/api';
 
-function AlertBuilder() {
+function AlertBuilder({ vessel, onSave, onCancel, existingRule }) {
     const [formData, setFormData] = useState({
-        name: '',
-        vesselId: '',
-        fieldName: '',
-        operator: '>',
-        threshold: '',
-        enabled: true
+        name: existingRule?.name || '',
+        vesselId: vessel?.id || existingRule?.vessel_id || '',
+        fieldName: existingRule?.field_name || '',
+        operator: existingRule?.operator || '>',
+        threshold: existingRule?.threshold || '',
+        enabled: existingRule?.enabled !== undefined ? existingRule.enabled : true
     });
+    const [vessels, setVessels] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        if (!vessel) {
+            loadVessels();
+        }
+    }, [vessel]);
+
+    const loadVessels = async () => {
+        try {
+            const response = await api.getVessels();
+            setVessels(response.data || []);
+        } catch (err) {
+            console.error('Error loading vessels:', err);
+            setError('Failed to load vessels');
+        }
+    };
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -19,15 +39,58 @@ function AlertBuilder() {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Alert Rule Submitted:', formData);
-        alert('Alert rule saved (mockup)!');
+        setLoading(true);
+        setError(null);
+
+        try {
+            const alertData = {
+                name: formData.name,
+                vessel_id: parseInt(formData.vesselId),
+                field_name: formData.fieldName,
+                operator: formData.operator,
+                threshold: parseFloat(formData.threshold),
+                enabled: formData.enabled
+            };
+
+            if (existingRule) {
+                // Update existing rule
+                await api.updateAlertRule(existingRule.id, alertData);
+                alert('Alert rule updated successfully!');
+            } else {
+                // Create new rule
+                await api.createAlertRule(alertData);
+                alert('Alert rule created successfully!');
+            }
+
+            if (onSave) {
+                onSave(alertData);
+            }
+        } catch (err) {
+            console.error('Error saving alert rule:', err);
+            setError(err.message || 'Failed to save alert rule');
+            alert('Error: ' + (err.message || 'Failed to save alert rule'));
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
         <div className="content_container">
-            <h1>Alert Builder</h1>
+            <h1>{existingRule ? 'Edit Alert Rule' : 'Create Alert Rule'}</h1>
+            {error && (
+                <div style={{
+                    padding: '15px',
+                    backgroundColor: 'rgba(244, 67, 54, 0.1)',
+                    border: '1px solid #f44336',
+                    borderRadius: '8px',
+                    marginBottom: '20px',
+                    color: '#f44336'
+                }}>
+                    <strong>Error:</strong> {error}
+                </div>
+            )}
             <div className="form_container">
                 <form onSubmit={handleSubmit}>
                     <div className="form_group">
@@ -44,16 +107,30 @@ function AlertBuilder() {
                     </div>
 
                     <div className="form_group">
-                        <label htmlFor="vesselId">Vessel ID</label>
-                        <input
-                            type="number"
-                            id="vesselId"
-                            name="vesselId"
-                            value={formData.vesselId}
-                            onChange={handleChange}
-                            required
-                            placeholder="Enter Vessel ID"
-                        />
+                        <label htmlFor="vesselId">Vessel</label>
+                        {vessel ? (
+                            <input
+                                type="text"
+                                value={vessel.name}
+                                disabled
+                                style={{ backgroundColor: '#f5f5f5' }}
+                            />
+                        ) : (
+                            <select
+                                id="vesselId"
+                                name="vesselId"
+                                value={formData.vesselId}
+                                onChange={handleChange}
+                                required
+                            >
+                                <option value="">Select a vessel</option>
+                                {vessels.map(v => (
+                                    <option key={v.id} value={v.id}>
+                                        {v.name} (IMEI: {v.imei})
+                                    </option>
+                                ))}
+                            </select>
+                        )}
                     </div>
 
                     <div className="form_group">
@@ -111,8 +188,23 @@ function AlertBuilder() {
                     </div>
 
                     <div className="form_actions">
-                        <button type="button" className="btn_secondary">Cancel</button>
-                        <button type="submit" className="btn_primary">Create Alert Rule</button>
+                        {onCancel && (
+                            <button
+                                type="button"
+                                className="btn_secondary"
+                                onClick={onCancel}
+                                disabled={loading}
+                            >
+                                Cancel
+                            </button>
+                        )}
+                        <button
+                            type="submit"
+                            className="btn_primary"
+                            disabled={loading}
+                        >
+                            {loading ? 'Saving...' : existingRule ? 'Update Alert Rule' : 'Create Alert Rule'}
+                        </button>
                     </div>
                 </form>
             </div>

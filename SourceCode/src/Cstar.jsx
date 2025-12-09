@@ -1,7 +1,8 @@
 // src/Cstar.jsx - FIXED VERSION WITH PROPER TEMPLATE LITERALS
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import api from './services/api';
 import './Cstar.css';
+import AlertBuilder from './AlertBuilder';
 
 function Cstar() {
   const [vessels, setVessels] = useState([]);
@@ -9,8 +10,11 @@ function Cstar() {
   const [error, setError] = useState(null);
   const [selectedVessel, setSelectedVessel] = useState(null);
   const [vesselAlertRules, setVesselAlertRules] = useState([]);
-  const [copiedRules, setCopiedRules] = useState([]);
   const [loadingRules, setLoadingRules] = useState(false);
+  const [showAlertBuilder, setShowAlertBuilder] = useState(false);
+  const [editingRule, setEditingRule] = useState(null);
+  const [showCopyToVessel, setShowCopyToVessel] = useState(false);
+  const [copyingRules, setCopyingRules] = useState(false);
 
   useEffect(() => {
     loadVessels();
@@ -105,27 +109,39 @@ function Cstar() {
     setVesselAlertRules([]);
   };
 
-  const handleCopyRules = () => {
-    setCopiedRules([...vesselAlertRules]);
-    alert(`Copied ${vesselAlertRules.length} alert rule(s) to clipboard`);
+  const handleCopyToVessel = () => {
+    if (vesselAlertRules.length === 0) {
+      alert('No alert rules to copy from this vessel');
+      return;
+    }
+    setShowCopyToVessel(true);
   };
 
-  const handlePasteRules = async () => {
-    if (copiedRules.length === 0) {
-      alert('No rules copied. Copy rules from another vessel first.');
+  const handleCopyRulesToSelectedVessel = async (targetVesselId) => {
+    if (!targetVesselId) {
+      alert('Please select a target vessel');
       return;
     }
 
-    if (!window.confirm(`Paste ${copiedRules.length} alert rule(s) to ${selectedVessel.name}?`)) {
+    const targetVessel = vessels.find(v => v.id === parseInt(targetVesselId));
+    if (!targetVessel) {
+      alert('Invalid vessel selection');
       return;
     }
 
+    if (!window.confirm(`Copy ${vesselAlertRules.length} alert rule(s) from ${selectedVessel.name} to ${targetVessel.name}?`)) {
+      // Reset dropdown selection
+      document.getElementById('targetVessel').value = '';
+      return;
+    }
+
+    setCopyingRules(true);
     try {
       let successCount = 0;
-      for (const rule of copiedRules) {
+      for (const rule of vesselAlertRules) {
         const newRule = {
           name: rule.name,
-          vessel_id: selectedVessel.id,
+          vessel_id: parseInt(targetVesselId),
           field_name: rule.field_name,
           operator: rule.operator,
           threshold: rule.threshold,
@@ -134,12 +150,17 @@ function Cstar() {
         await api.createAlertRule(newRule);
         successCount++;
       }
-      alert(`Successfully pasted ${successCount} alert rule(s)`);
-      // Reload alert rules for current vessel
-      handleVesselClick(selectedVessel);
+      alert(`Successfully copied ${successCount} alert rule(s) to ${targetVessel.name}`);
+      setShowCopyToVessel(false);
+      // Reset dropdown
+      document.getElementById('targetVessel').value = '';
     } catch (err) {
-      console.error('Error pasting rules:', err);
-      alert('Error pasting rules: ' + err.message);
+      console.error('Error copying rules:', err);
+      alert('Error copying rules: ' + err.message);
+      // Reset dropdown on error
+      document.getElementById('targetVessel').value = '';
+    } finally {
+      setCopyingRules(false);
     }
   };
 
@@ -154,6 +175,30 @@ function Cstar() {
       console.error('Error deleting rule:', err);
       alert('Error deleting rule: ' + err.message);
     }
+  };
+
+  const handleCreateAlert = () => {
+    setEditingRule(null);
+    setShowAlertBuilder(true);
+  };
+
+  const handleEditRule = (rule) => {
+    setEditingRule(rule);
+    setShowAlertBuilder(true);
+  };
+
+  const handleAlertBuilderSave = () => {
+    setShowAlertBuilder(false);
+    setEditingRule(null);
+    // Reload alert rules for current vessel
+    if (selectedVessel) {
+      handleVesselClick(selectedVessel);
+    }
+  };
+
+  const handleAlertBuilderCancel = () => {
+    setShowAlertBuilder(false);
+    setEditingRule(null);
   };
 
   if (loading) {
@@ -253,18 +298,17 @@ function Cstar() {
                 <h3>Alert Rules ({vesselAlertRules.length})</h3>
                 <div style={{ display: 'flex', gap: '10px' }}>
                   <button
-                    className="btn_secondary"
-                    onClick={handleCopyRules}
-                    disabled={vesselAlertRules.length === 0}
+                    className="btn_primary"
+                    onClick={handleCreateAlert}
                   >
-                    📋 Copy Rules
+                    ➕ Create Alert
                   </button>
                   <button
-                    className="btn_primary"
-                    onClick={handlePasteRules}
-                    disabled={copiedRules.length === 0}
+                    className="btn_secondary"
+                    onClick={handleCopyToVessel}
+                    disabled={vesselAlertRules.length === 0}
                   >
-                    📥 Paste Rules ({copiedRules.length})
+                    📋 Copy Rules to Another Vessel
                   </button>
                 </div>
               </div>
@@ -303,6 +347,13 @@ function Cstar() {
                         </td>
                         <td>
                           <button
+                            className="action_btn"
+                            onClick={() => handleEditRule(rule)}
+                            style={{ marginRight: '5px' }}
+                          >
+                            Edit
+                          </button>
+                          <button
                             className="action_btn delete"
                             onClick={() => handleDeleteRule(rule.id)}
                           >
@@ -315,6 +366,91 @@ function Cstar() {
                 </table>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Copy Rules Modal */}
+      {showCopyToVessel && (
+        <div className="modal_overlay" onClick={() => setShowCopyToVessel(false)} style={{ zIndex: 1001 }}>
+          <div className="modal_content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '500px', padding: '30px' }}>
+            <h2 style={{ marginTop: 0, marginBottom: '10px' }}>Copy Alert Rules</h2>
+            <p style={{ color: '#a0a0a0', marginBottom: '25px' }}>
+              Copy {vesselAlertRules.length} alert rules from <strong>{selectedVessel.name}</strong> to another vessel
+            </p>
+
+            <div style={{ marginBottom: '25px' }}>
+              <label style={{ display: 'block', marginBottom: '10px', fontSize: '16px', fontWeight: '500' }}>
+                Select Target Vessel:
+              </label>
+              <select
+                id="targetVessel"
+                style={{
+                  width: '100%',
+                  padding: '15px',
+                  borderRadius: '8px',
+                  border: '2px solid #ccc',
+                  fontSize: '16px',
+                  backgroundColor: '#fff',
+                  cursor: 'pointer'
+                }}
+                onChange={(e) => {
+                  if (e.target.value) {
+                    handleCopyRulesToSelectedVessel(e.target.value);
+                  }
+                }}
+                disabled={copyingRules}
+              >
+                <option value="">-- Select a vessel --</option>
+                {vessels
+                  .filter(v => v.id !== selectedVessel.id)
+                  .map(vessel => (
+                    <option key={vessel.id} value={vessel.id}>
+                      {vessel.name} (IMEI: {vessel.imei})
+                    </option>
+                  ))}
+              </select>
+            </div>
+
+            {copyingRules && (
+              <div style={{
+                padding: '15px',
+                backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                border: '1px solid #2196F3',
+                borderRadius: '8px',
+                marginBottom: '20px',
+                color: '#2196F3',
+                textAlign: 'center',
+                fontSize: '16px'
+              }}>
+                🔄 Copying rules...
+              </div>
+            )}
+
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+              <button
+                className="btn_secondary"
+                onClick={() => setShowCopyToVessel(false)}
+                disabled={copyingRules}
+                style={{ padding: '12px 24px', fontSize: '16px' }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Alert Builder Modal */}
+      {showAlertBuilder && (
+        <div className="modal_overlay" onClick={handleAlertBuilderCancel}>
+          <div className="modal_content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '600px' }}>
+            <AlertBuilder
+              vessel={selectedVessel}
+              existingRule={editingRule}
+              onSave={handleAlertBuilderSave}
+              onCancel={handleAlertBuilderCancel}
+            />
           </div>
         </div>
       )}
