@@ -133,6 +133,26 @@ class ApiService {
     return this.request('/alerts/rules?' + params);
   }
 
+  async createAlertRule(alertData) {
+    return this.request('/alerts/rules', {
+      method: 'POST',
+      body: JSON.stringify(alertData)
+    });
+  }
+
+  async updateAlertRule(id, alertData) {
+    return this.request('/alerts/rules/' + id, {
+      method: 'PUT',
+      body: JSON.stringify(alertData)
+    });
+  }
+
+  async deleteAlertRule(id) {
+    return this.request('/alerts/rules/' + id, {
+      method: 'DELETE'
+    });
+  }
+
   async getActiveAlerts() {
     return this.request('/alerts/active');
   }
