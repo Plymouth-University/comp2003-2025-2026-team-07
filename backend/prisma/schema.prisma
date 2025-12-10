@@ -220,3 +220,21 @@ model vessels {
   @@index([primary_supervisor_id], map: "idx_vessels_primary_supervisor")
   @@index([secondary_supervisor_id], map: "idx_vessels_secondary_supervisor")
 }
+
+model Cstar {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  description String   @db.Text
+  category    String?  @default("General") @db.VarChar(100)
+  points      Int      @default(0)
+  createdBy   Int?     @map("created_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  
+  // Optional: Add relation to User if you have a User model
+  // user        User?    @relation(fields: [createdBy], references: [id])
+  
+  @@index([createdBy])
+  @@index([category])
+  @@map("cstars")
+}
