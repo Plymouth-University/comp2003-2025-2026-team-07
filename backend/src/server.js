@@ -12,6 +12,7 @@ const geofenceRoutes = require('./routes/geofences');
 const telemetryRoutes = require('./routes/telemetry');
 const authRoutes = require('./routes/auth');
 const dataFetcherRoutes = require('./routes/dataFetcher');
+const cstarsRoutes = require('./routes/cstars');
 
 // Import data fetcher service
 const dataFetcherService = require('./services/dataFetcherService');
@@ -86,6 +87,7 @@ app.use('/api/geofences', geofenceRoutes);
 app.use('/api/telemetry', telemetryRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/data-fetcher', dataFetcherRoutes);
+app.use('/api/cstars', cstarsRoutes);
 
 // API documentation endpoint
 app.get('/api', (req, res) => {
@@ -146,8 +148,12 @@ app.get('/api', (req, res) => {
         trigger: 'POST /api/data-fetcher/trigger (Admin)',
         start: 'POST /api/data-fetcher/start (Admin)',
         stop: 'POST /api/data-fetcher/stop (Admin)'
+      },
+      cstars: {
+        list: 'GET /api/cstars'
       }
     },
+
     documentation: 'See README.md for detailed API documentation'
   });
 });
@@ -218,3 +224,4 @@ process.on('SIGINT', () => {
 });
 
 module.exports = app;
+
