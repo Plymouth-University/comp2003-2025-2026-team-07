@@ -315,6 +315,26 @@ function Cstar({ currentUser }) {
             </div>
 
             <div style={{ padding: '20px', overflowY: 'auto', flex: 1 }}>
+              {isAdmin && (
+                <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: 'rgba(211, 47, 47, 0.1)', border: '1px solid #d32f2f', borderRadius: '8px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <strong style={{ color: '#d32f2f' }}>⚠️ Admin Actions</strong>
+                      <p style={{ margin: '5px 0 0 0', fontSize: '0.9rem', color: '#757575' }}>
+                        Delete this vessel and all associated data
+                      </p>
+                    </div>
+                    <button
+                      className="action_btn delete"
+                      onClick={() => handleDeleteVessel(selectedVessel.id, selectedVessel.name)}
+                      style={{ padding: '10px 20px', fontSize: '16px' }}
+                    >
+                      🗑️ Delete Vessel
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <div style={{ marginBottom: '20px', display: 'flex', gap: '10px', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h3>Alert Rules ({vesselAlertRules.length})</h3>
                 <div style={{ display: 'flex', gap: '10px' }}>
