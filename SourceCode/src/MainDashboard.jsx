@@ -12,7 +12,7 @@ function MainDashboard({ user, onLogout }) {
   const renderContent = () => {
     switch (activeTab) {
       case 'cstars':
-        return <Cstar />;
+        return <Cstar currentUser={user} />;
       case 'geofences':
         return <Geofences />;
       case 'usersupport':
@@ -20,7 +20,7 @@ function MainDashboard({ user, onLogout }) {
       case 'settings':
         return <Settings />;
       default:
-        return <Cstar />;
+        return <Cstar currentUser={user} />;
     }
   };
 

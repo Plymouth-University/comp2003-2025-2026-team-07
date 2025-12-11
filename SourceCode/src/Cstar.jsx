@@ -4,7 +4,7 @@ import api from './services/api';
 import './Cstar.css';
 import AlertBuilder from './AlertBuilder';
 
-function Cstar() {
+function Cstar({ currentUser }) {
   const [vessels, setVessels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,6 +15,8 @@ function Cstar() {
   const [editingRule, setEditingRule] = useState(null);
   const [showCopyToVessel, setShowCopyToVessel] = useState(false);
   const [copyingRules, setCopyingRules] = useState(false);
+
+  const isAdmin = currentUser && currentUser.role === 'admin';
 
   useEffect(() => {
     loadVessels();
@@ -199,6 +201,25 @@ function Cstar() {
   const handleAlertBuilderCancel = () => {
     setShowAlertBuilder(false);
     setEditingRule(null);
+  };
+
+  const handleDeleteVessel = async (vesselId, vesselName) => {
+    if (!window.confirm(`Are you sure you want to delete vessel "${vesselName}"? This action cannot be undone and will also delete all associated alert rules and data.`)) {
+      return;
+    }
+
+    try {
+      await api.deleteVessel(vesselId);
+      alert(`Vessel "${vesselName}" deleted successfully`);
+
+      // Close modal and refresh vessel list
+      setSelectedVessel(null);
+      setVesselAlertRules([]);
+      loadVessels();
+    } catch (err) {
+      console.error('Error deleting vessel:', err);
+      alert('Error deleting vessel: ' + err.message);
+    }
   };
 
   if (loading) {
