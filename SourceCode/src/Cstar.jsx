@@ -29,7 +29,7 @@ function Cstar({ currentUser }) {
     try {
       setError(null);
       const response = await api.getVessels();
-      
+
       // Transform backend data to match card format
       const transformedVessels = response.data.map(vessel => ({
         id: vessel.id,
@@ -41,7 +41,7 @@ function Cstar({ currentUser }) {
         lastUpdate: getLastUpdateText(vessel.last_check_in_at),
         emergency: vessel.emergency_alert_active
       }));
-      
+
       setVessels(transformedVessels);
     } catch (err) {
       console.error('Error loading vessels:', err);
@@ -55,30 +55,30 @@ function Cstar({ currentUser }) {
     if (vessel.emergency_alert_active) return 'alert';
     if (!vessel.at_sea_status) return 'offline';
     if (!vessel.last_check_in_at) return 'offline';
-    
+
     // Check if last check-in was more than 1 hour ago
     const lastCheckIn = new Date(vessel.last_check_in_at);
     const now = new Date();
     const hoursSinceCheckIn = (now - lastCheckIn) / (1000 * 60 * 60);
-    
+
     if (hoursSinceCheckIn > 1) return 'offline';
     return 'safe';
   };
 
   const getLastUpdateText = (timestamp) => {
     if (!timestamp) return 'Never';
-    
+
     const lastUpdate = new Date(timestamp);
     const now = new Date();
     const diffMs = now - lastUpdate;
     const diffMins = Math.floor(diffMs / 60000);
-    
+
     if (diffMins < 1) return 'Just now';
     if (diffMins < 60) return `${diffMins} min${diffMins > 1 ? 's' : ''} ago`;
-    
+
     const diffHours = Math.floor(diffMins / 60);
     if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-    
+
     const diffDays = Math.floor(diffHours / 24);
     return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
   };
@@ -502,3 +502,15 @@ function Cstar({ currentUser }) {
 }
 
 export default Cstar;
+
+//next steps
+//1. add alert builder functionality
+//2. add alert builder saving functionality
+//3. add alert builder deletion functionality
+//4. add alert builder editing functionality
+//5. add alert builder color coding functionality
+//6. add alert builder popup functionality
+//7. add alert builder alert functionality
+//8. add alert builder geofence functionality
+//9. add alert timer functionality
+//10. add seperate customizable timer for each alert rule
