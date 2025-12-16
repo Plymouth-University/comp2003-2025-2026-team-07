@@ -42,3 +42,13 @@ function Settings() {
 }
 
 export default Settings;
+
+//next steps
+//1. add vessel saving functionality
+//2. add vessel deletion functionality
+//3. add vessel editing functionality
+//4. add vessel color coding functionality
+//5. add vessel popup functionality
+//6. add vessel alert functionality
+//7. add vessel geofence functionality
+//8. add vessel tracking functionality

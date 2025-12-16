@@ -74,7 +74,7 @@ function Geofences() {
     console.log('Map initialized successfully');
 
     // Click handler for drawing geofence points
-    map_instance.current.on('click', function(e) {
+    map_instance.current.on('click', function (e) {
       if (drawMode) {
         const { lat, lng } = e.latlng;
         const marker = L.marker([lat, lng], {
@@ -209,14 +209,14 @@ function Geofences() {
           fillOpacity: 0.2,
           weight: 2,
         })
-        .bindPopup(`
+          .bindPopup(`
           <div style="color: #fff;">
             <h3 style="margin: 0 0 8px 0; color: #2196F3;">${geofence.name}</h3>
             <p style="margin: 4px 0;">${geofence.description || 'No description'}</p>
             <p style="margin: 4px 0;"><strong>Type:</strong> ${geofence.type}</p>
           </div>
         `)
-        .addTo(map_instance.current);
+          .addTo(map_instance.current);
       }
     });
   }, [geofences]);
@@ -354,3 +354,13 @@ function Geofences() {
 }
 
 export default Geofences;
+
+//next steps
+//1. add geofence drawing functionality
+//2. add geofence saving functionality
+//3. add geofence deletion functionality
+//4. add geofence editing functionality
+//5. add geofence color coding functionality
+//6. add geofence popup functionality
+//7. add geofence alert functionality
+//8. change the map to a fleet map
