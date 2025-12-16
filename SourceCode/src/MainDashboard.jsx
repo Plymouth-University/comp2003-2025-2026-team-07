@@ -46,3 +46,15 @@ function MainDashboard({ user, onLogout }) {
 }
 
 export default MainDashboard;
+
+//next steps
+//1. add user support functionality
+//2. add user support saving functionality
+//3. add user support deletion functionality
+//4. add user support editing functionality
+//5. add user support color coding functionality
+//6. add user support popup functionality
+//7. add user support alert functionality
+//8. add user support geofence functionality
+//9. add user support tracking functionality
+//10. add user support geofence functionality
