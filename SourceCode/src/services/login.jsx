@@ -32,7 +32,7 @@ function Login({ onLoginSuccess }) {
         <img src={logo} alt="Oshen Logo" className="login_logo" />
         <h2>Oshen Alert System</h2>
         <p className="login_subtitle">Vessel Monitoring & Alert Management</p>
-        
+
         <form onSubmit={handleLogin} className="login_form">
           <div className="input_group">
             <label htmlFor="username">Username</label>
@@ -89,3 +89,6 @@ function Login({ onLoginSuccess }) {
 }
 
 export default Login;
+
+//next steps
+//1. add login functionality
