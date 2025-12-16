@@ -117,3 +117,14 @@ function VesselSettingsModal({ vessel, onClose, onSave }) {
 }
 
 export default VesselSettingsModal;
+
+//next steps
+//1. add vessel settings saving functionality
+//2. add vessel settings deletion functionality
+//3. add vessel settings editing functionality
+//4. add vessel settings color coding functionality
+//5. add vessel settings popup functionality
+//6. add vessel settings alert functionality
+//7. add vessel settings geofence functionality
+//8. add vessel settings tracking functionality
+//9. add vessel settings geofence functionality
