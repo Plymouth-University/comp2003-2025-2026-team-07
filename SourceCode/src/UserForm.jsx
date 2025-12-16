@@ -112,3 +112,14 @@ function UserForm({ onCancel, onSave }) {
 }
 
 export default UserForm;
+
+//next steps
+//1. add user form saving functionality
+//2. add user form deletion functionality
+//3. add user form editing functionality
+//4. add user form color coding functionality
+//5. add user form popup functionality
+//6. add user form alert functionality
+//7. add user form geofence functionality
+//8. add user form tracking functionality
+//9. add user form geofence functionality
