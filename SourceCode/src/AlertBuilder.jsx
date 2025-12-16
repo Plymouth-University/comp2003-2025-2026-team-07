@@ -213,3 +213,14 @@ function AlertBuilder({ vessel, onSave, onCancel, existingRule }) {
 }
 
 export default AlertBuilder;
+
+//next steps
+//1. add alert builder saving functionality
+//2. add alert builder deletion functionality
+//3. add alert builder editing functionality
+//4. add alert builder color coding functionality
+//5. add alert builder popup functionality
+//6. add alert builder alert functionality
+//7. add alert builder geofence functionality
+//8. add alert builder tracking functionality
+//9. add alert builder geofence functionality
