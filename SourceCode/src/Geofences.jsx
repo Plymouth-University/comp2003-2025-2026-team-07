@@ -224,9 +224,13 @@ function Geofences() {
   // Draw geofence polygon
   useEffect(() => {
     if (geofence_points.length >= 3) {
+      // this defines that a minimum of 3 points are required for the creation of a geofence
+
       if (reference_geofence.current) {
         map_instance.current.removeLayer(reference_geofence.current);
       }
+      // currently, this gets rid of the previous geofence when a new one is drawn
+      // this is intended to change so that multiple geofences can be created
 
       const coords = geofence_points.map(p => p.coords);
       reference_geofence.current = L.polygon(coords, {
@@ -235,6 +239,7 @@ function Geofences() {
         fillOpacity: 0.3,
         weight: 3,
       }).addTo(map_instance.current);
+      //this defines the geofence's visual aspects
     }
   }, [geofence_points]);
 
@@ -250,6 +255,7 @@ function Geofences() {
     if (hoursSinceCheckIn > 1) return 'offline';
     return 'safe';
   };
+  // gets the actual status of the vessel, its passed to the function below
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -259,6 +265,7 @@ function Geofences() {
       default: return '#757575';
     }
   };
+  // this makes it easy to see the staus of a vessel
 
   const getLastUpdateText = (timestamp) => {
     if (!timestamp) return 'Never';
@@ -277,6 +284,7 @@ function Geofences() {
     const diffDays = Math.floor(diffHours / 24);
     return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
   };
+  // this makes it apparent when the last update was made
 
   const handleClear = () => {
     if (reference_geofence.current) {
