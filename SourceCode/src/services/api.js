@@ -1,9 +1,52 @@
-const API_BASE_URL = 'https://ares-swirlier-yulanda.ngrok-free.dev/api';
+// Try ngrok first (for development), fallback to localhost (for markers/submission)
+const API_URLS = [
+  'https://ares-swirlier-yulanda.ngrok-free.dev/api',
+  'http://localhost:3000/api'
+];
 
 class ApiService {
   constructor() {
-    this.baseUrl = API_BASE_URL;
+    this.baseUrl = null; // Will be determined on first request
     this.token = null;
+    this.urlIndex = 0; // Track which URL to try
+  }
+
+  async determineWorkingUrl() {
+    // If we already found a working URL, use it
+    if (this.baseUrl) return this.baseUrl;
+
+    // Try ngrok first, then localhost
+    for (let i = 0; i < API_URLS.length; i++) {
+      try {
+        const testUrl = API_URLS[i];
+        console.log(`🔍 Testing backend connection: ${testUrl}`);
+
+        // Simple connectivity test - try to fetch without auth
+        await fetch(testUrl + '/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'ngrok-skip-browser-warning': 'true'
+          },
+          body: JSON.stringify({ username: '', password: '' })
+        });
+
+        // Even if credentials are wrong (400), the server is reachable
+        // Network errors will throw and move to catch block
+        console.log(`✅ Backend reachable at: ${testUrl}`);
+        this.baseUrl = testUrl;
+        return testUrl;
+
+      } catch (err) {
+        console.log(`❌ Cannot reach: ${API_URLS[i]}`);
+        // Continue to next URL
+      }
+    }
+
+    // If all URLs failed, default to localhost anyway
+    console.warn('⚠️ All backend URLs failed to respond, defaulting to localhost');
+    this.baseUrl = API_URLS[1]; // localhost
+    return this.baseUrl;
   }
 
   getToken() {
@@ -24,6 +67,9 @@ class ApiService {
   }
 
   async request(endpoint, options = {}) {
+    // Determine working URL on first request
+    await this.determineWorkingUrl();
+
     const token = this.getToken();
 
     const config = {
