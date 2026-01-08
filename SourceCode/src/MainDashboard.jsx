@@ -23,6 +23,7 @@ function MainDashboard({ user, onLogout }) {
         return <Cstar currentUser={user} />;
     }
   };
+  // switches between the different tabs in the dashboard
 
   return (
     <div className='dashboard_container'>
