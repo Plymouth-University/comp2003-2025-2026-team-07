@@ -1,0 +1,130 @@
+// src/services/api.js
+const API_BASE_URL = 'https://ares-swirlier-yulanda.ngrok-free.dev/api';
+
+class ApiService {
+  constructor() {
+    this.baseUrl = API_BASE_URL;
+    this.token = null;
+  }
+
+  getToken() {
+    if (!this.token) {
+      this.token = localStorage.getItem('authToken');
+    }
+    return this.token;
+  }
+
+  setToken(token) {
+    this.token = token;
+    localStorage.setItem('authToken', token);
+  }
+
+  clearToken() {
+    this.token = null;
+    localStorage.removeItem('authToken');
+  }
+
+  async request(endpoint, options = {}) {
+    const token = this.getToken();
+    
+    const config = {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token && { Authorization: `Bearer ${token}` }),
+        ...options.headers,
+      },
+    };
+
+    try {
+      const response = await fetch(`${this.baseUrl}${endpoint}`, config);
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          this.clearToken();
+          window.location.href = '/';
+        }
+        throw new Error(data.error || 'Request failed');
+      }
+
+      return data;
+    } catch (error) {
+      console.error('API Error:', error);
+      throw error;
+    }
+  }
+
+  async login(username, password) {
+    const data = await this.request('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ username, password }),
+    });
+    this.setToken(data.data.token);
+    return data;
+  }
+
+  async logout() {
+    this.clearToken();
+  }
+
+  isAuthenticated() {
+    return !!this.getToken();
+  }
+
+  async getVessels() {
+    return this.request('/vessels');
+  }
+
+  async getVessel(id) {
+    return this.request(`/vessels/${id}`);
+  }
+
+  async getVesselStats(id) {
+    return this.request(`/vessels/${id}/stats`);
+  }
+
+  async getGeofences() {
+    return this.request('/geofences');
+  }
+
+  async getGeofencesByVessel(vesselId) {
+    return this.request(`/geofences/vessel/${vesselId}`);
+  }
+
+  async getAlertRules(filters = {}) {
+    const params = new URLSearchParams(filters);
+    return this.request(`/alerts/rules?${params}`);
+  }
+
+  async getActiveAlerts() {
+    return this.request('/alerts/active');
+  }
+
+  async getAlertHistory(filters = {}) {
+    const params = new URLSearchParams(filters);
+    return this.request(`/alerts/history?${params}`);
+  }
+
+  async acknowledgeAlert(id) {
+    return this.request(`/alerts/${id}/acknowledge`, {
+      method: 'POST',
+    });
+  }
+
+  async resolveAlert(id) {
+    return this.request(`/alerts/${id}/resolve`, {
+      method: 'POST',
+    });
+  }
+
+  async getLatestTelemetry(vesselId) {
+    return this.request(`/telemetry/vessel/${vesselId}/latest`);
+  }
+
+  async getTelemetryHistory(vesselId, limit = 50) {
+    return this.request(`/telemetry?vessel_id=${vesselId}&limit=${limit}`);
+  }
+}
+
+export default new ApiService();
