@@ -1,56 +1,171 @@
 List meeting minutes
 
+
+
 Client meeting 1
+
 Location RLB Container Café
+
 Time: 11:00 - 11:50
+
 Date: 30 October 2025
 
+Notes:
+
+* Produce a set list of requirements
+* Identify responsibilities
+* Produce a detailed project layout and tech stack plan
+* Structure Agile workflow
+* Start creating a lightweight database
+
+
+
 Sprint meeting 1
+
 Location: PSQ B310
+
 Time: 11:30 - 11:45
+
 Date: 3 November 2025
 
+Notes:
+
+* Outline of how sprint meetings work
+* Told about setting a team leader
+
+
+
 Group meeting 1 
+
 Location: Smeaton building
+
 Time: 11:00 - 12:00
+
 Date: 12 November 2025
 
+Notes:
+
+* Outline what we need to tackle and when
+* Showing the current work to rest of team
+
+
+
 Client meeting 2
+
 Location RLB Container Café
+
 Time: 11:00 - 11:50
+
 Date: 13 November 2025
 
+Notes:
+
+* Shown frontend mock-up
+* Continue making the database
+* Potential database diagram
+* Research how to ping alerts
+
+
+
 Sprint meeting 2
+
 Location: PSQ B310
+
 Time: 11:30 - 11:45
+
 Date: 17 November 2025
 
+* Progress update of what we have done so far and what we intend to do before the next sprint
+* Team leader nominated
+
+
+
 Group meeting 2
+
 Location: Virtual
+
 Time: 11:00 - 12:30
+
 Date: 19 November 2025
 
+Notes:
+
+* Progress update
+* Status update on the database and its functionality
+
+
+
 Group meeting 3
+
 Location: Virtual
+
 Time: 11:00 - 12:00
+
 Date: 26 November 2025
 
+Notes:
+
+* Progress update
+
+
+
 Client meeting 3
+
 Location RLB Container Café
+
 Time: 11:00 - 11:30
+
 Date: 27 November 2025
 
+Notes:
+
+* Progress check-up
+* On task and making good progress
+
+
+
 Sprint meeting 3
+
 Location: PSQ B310
+
 Time: 11:30 - 11:45
+
 Date: 1 December 2025
 
+Notes:
+
+* Final sprint meeting before Christmas break
+* Progress update
+* Reminded to ensure everything is visible on the Github
+
+
+
 Group meeting 4
+
 Location: Virtual
+
 Time: 11:00 - 12:00
+
 Date: 3 December 2025
 
+Notes:
+
+* Final group meeting before Christmas
+* Set outline of what we need to do over the break
+* Progress update
+
+
+
 Client meeting 4
+
 Location RLB Container Café
+
 Time: 11:00 - 11:40
+
 Date: 11 December 2025
+
+Notes:
+
+* MVP created 
+* Many met requirements 
+* Good and usable but can be improved
