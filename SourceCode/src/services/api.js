@@ -249,6 +249,49 @@ class ApiService {
       method: 'DELETE'
     });
   }
+
+  // Compound Alert Rules
+  async getCompoundRules(vesselId) {
+    const params = vesselId ? '?vessel_id=' + vesselId : '';
+    return this.request('/alerts/compound-rules' + params);
+  }
+
+  async createCompoundRule(data) {
+    return this.request('/alerts/compound-rules', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  }
+
+  async updateCompoundRule(id, data) {
+    return this.request('/alerts/compound-rules/' + id, {
+      method: 'PUT',
+      body: JSON.stringify(data)
+    });
+  }
+
+  async deleteCompoundRule(id) {
+    return this.request('/alerts/compound-rules/' + id, {
+      method: 'DELETE'
+    });
+  }
+
+  async getActiveCompoundAlerts(vesselId) {
+    const params = vesselId ? '?vessel_id=' + vesselId : '';
+    return this.request('/alerts/compound-active' + params);
+  }
+
+  async acknowledgeCompoundAlert(id) {
+    return this.request('/alerts/compound/' + id + '/acknowledge', {
+      method: 'POST'
+    });
+  }
+
+  async resolveCompoundAlert(id) {
+    return this.request('/alerts/compound/' + id + '/resolve', {
+      method: 'POST'
+    });
+  }
 }
 
 export default new ApiService();

@@ -16,12 +16,29 @@ function Cstar({ currentUser }) {
   const [showCopyToVessel, setShowCopyToVessel] = useState(false);
   const [copyingRules, setCopyingRules] = useState(false);
 
+  // Compound alert state
+  const [compoundRules, setCompoundRules] = useState([]);
+  const [loadingCompoundRules, setLoadingCompoundRules] = useState(false);
+  const [showCompoundBuilder, setShowCompoundBuilder] = useState(false);
+  const [editingCompoundRule, setEditingCompoundRule] = useState(null);
+  const [activeCompoundAlerts, setActiveCompoundAlerts] = useState([]);
+  const [vesselCompoundBadges, setVesselCompoundBadges] = useState({});
+  const [compoundFormData, setCompoundFormData] = useState({ name: '', description: '', threshold_count: 2, time_window_mins: 60, enabled: true });
+  const [savingCompound, setSavingCompound] = useState(false);
+
   const isAdmin = currentUser && currentUser.role === 'admin';
+  const isSupervisor = currentUser && (currentUser.role === 'supervisor' || currentUser.role === 'admin');
 
   useEffect(() => {
     loadVessels();
     // Refresh every 30 seconds
     const interval = setInterval(loadVessels, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    loadCompoundBadges();
+    const interval = setInterval(loadCompoundBadges, 30000);
     return () => clearInterval(interval);
   }, []);
 
@@ -48,6 +65,20 @@ function Cstar({ currentUser }) {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadCompoundBadges = async () => {
+    try {
+      const response = await api.getActiveCompoundAlerts(null);
+      const alerts = response.data || [];
+      const badges = {};
+      alerts.forEach(alert => {
+        badges[alert.vessel_id] = (badges[alert.vessel_id] || 0) + 1;
+      });
+      setVesselCompoundBadges(badges);
+    } catch (err) {
+      // Silently fail — badges are non-critical
     }
   };
 
@@ -95,20 +126,43 @@ function Cstar({ currentUser }) {
   const handleVesselClick = async (vessel) => {
     setSelectedVessel(vessel);
     setLoadingRules(true);
+    setLoadingCompoundRules(true);
+
+    // Fetch individual alert rules independently so a compound API failure can't affect them
     try {
-      const response = await api.getAlertRules({ vessel_id: vessel.id });
-      setVesselAlertRules(response.data || []);
+      const rulesResponse = await api.getAlertRules({ vessel_id: vessel.id });
+      setVesselAlertRules(rulesResponse.data || []);
     } catch (err) {
       console.error('Error loading alert rules:', err);
       setVesselAlertRules([]);
     } finally {
       setLoadingRules(false);
     }
+
+    // Fetch compound data separately — gracefully degrades if endpoints not yet live
+    try {
+      const [compoundRulesResponse, activeCompoundResponse] = await Promise.all([
+        api.getCompoundRules(vessel.id),
+        api.getActiveCompoundAlerts(vessel.id)
+      ]);
+      setCompoundRules(compoundRulesResponse.data || []);
+      setActiveCompoundAlerts(activeCompoundResponse.data || []);
+    } catch (err) {
+      console.error('Error loading compound data:', err);
+      setCompoundRules([]);
+      setActiveCompoundAlerts([]);
+    } finally {
+      setLoadingCompoundRules(false);
+    }
   };
 
   const handleCloseModal = () => {
     setSelectedVessel(null);
     setVesselAlertRules([]);
+    setCompoundRules([]);
+    setActiveCompoundAlerts([]);
+    setShowCompoundBuilder(false);
+    setEditingCompoundRule(null);
   };
 
   const handleCopyToVessel = () => {
@@ -222,6 +276,90 @@ function Cstar({ currentUser }) {
     }
   };
 
+  // Compound rule handlers
+  const handleCreateCompoundRule = () => {
+    setEditingCompoundRule(null);
+    setCompoundFormData({ name: '', description: '', threshold_count: 2, time_window_mins: 60, enabled: true });
+    setShowCompoundBuilder(true);
+  };
+
+  const handleEditCompoundRule = (rule) => {
+    setEditingCompoundRule(rule);
+    setCompoundFormData({
+      name: rule.name,
+      description: rule.description || '',
+      threshold_count: rule.threshold_count,
+      time_window_mins: rule.time_window_mins,
+      enabled: rule.enabled
+    });
+    setShowCompoundBuilder(true);
+  };
+
+  const handleDeleteCompoundRule = async (id) => {
+    if (!window.confirm('Delete this compound alert rule?')) return;
+    try {
+      await api.deleteCompoundRule(id);
+      setCompoundRules(compoundRules.filter(r => r.id !== id));
+    } catch (err) {
+      alert('Error deleting compound rule: ' + err.message);
+    }
+  };
+
+  const handleSaveCompoundRule = async () => {
+    if (!compoundFormData.name.trim()) {
+      alert('Rule name is required');
+      return;
+    }
+    setSavingCompound(true);
+    try {
+      if (editingCompoundRule) {
+        const response = await api.updateCompoundRule(editingCompoundRule.id, compoundFormData);
+        setCompoundRules(compoundRules.map(r => r.id === editingCompoundRule.id ? response.data : r));
+      } else {
+        const response = await api.createCompoundRule({ ...compoundFormData, vessel_id: selectedVessel.id });
+        setCompoundRules([...compoundRules, response.data]);
+      }
+      setShowCompoundBuilder(false);
+      setEditingCompoundRule(null);
+    } catch (err) {
+      alert('Error saving compound rule: ' + err.message);
+    } finally {
+      setSavingCompound(false);
+    }
+  };
+
+  const handleCancelCompoundRule = () => {
+    setShowCompoundBuilder(false);
+    setEditingCompoundRule(null);
+  };
+
+  const handleAcknowledgeCompoundAlert = async (id) => {
+    try {
+      await api.acknowledgeCompoundAlert(id);
+      setActiveCompoundAlerts(activeCompoundAlerts.map(a =>
+        a.id === id ? { ...a, status: 'acknowledged' } : a
+      ));
+    } catch (err) {
+      alert('Error acknowledging alert: ' + err.message);
+    }
+  };
+
+  const handleResolveCompoundAlert = async (id) => {
+    try {
+      await api.resolveCompoundAlert(id);
+      setActiveCompoundAlerts(activeCompoundAlerts.filter(a => a.id !== id));
+      // Decrement badge for this vessel
+      const updatedBadges = { ...vesselCompoundBadges };
+      if (updatedBadges[selectedVessel.id]) {
+        updatedBadges[selectedVessel.id] = Math.max(0, updatedBadges[selectedVessel.id] - 1);
+        if (updatedBadges[selectedVessel.id] === 0) delete updatedBadges[selectedVessel.id];
+      }
+      setVesselCompoundBadges(updatedBadges);
+    } catch (err) {
+      alert('Error resolving alert: ' + err.message);
+    }
+  };
+
   if (loading) {
     return (
       <div className='content_container'>
@@ -267,10 +405,17 @@ function Cstar({ currentUser }) {
           >
             <div className="vessel_header">
               <h3 className="vessel_name">{vessel.name}</h3>
-              <span className={`status_badge ${getStatusClass(vessel.status)}`}>
-                {vessel.status}
-                {vessel.emergency && ' 🚨'}
-              </span>
+              <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                <span className={`status_badge ${getStatusClass(vessel.status)}`}>
+                  {vessel.status}
+                  {vessel.emergency && ' 🚨'}
+                </span>
+                {vesselCompoundBadges[vessel.id] > 0 && (
+                  <span className="compound_badge" title="Active compound alerts">
+                    🔗 {vesselCompoundBadges[vessel.id]}
+                  </span>
+                )}
+              </div>
             </div>
             <div className="vessel_details">
               <div className="detail_row">
@@ -406,6 +551,197 @@ function Cstar({ currentUser }) {
                   </tbody>
                 </table>
               )}
+
+              {/* Compound Rules Section */}
+              <div style={{ marginTop: '30px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '20px' }}>
+                <div style={{ marginBottom: '20px', display: 'flex', gap: '10px', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <h3>Compound Rules ({compoundRules.length})</h3>
+                  {isAdmin && (
+                    <button className="btn_primary" onClick={handleCreateCompoundRule}>
+                      ➕ Create Compound Rule
+                    </button>
+                  )}
+                </div>
+
+                {/* Inline compound rule form */}
+                {showCompoundBuilder && (
+                  <div className="compound_form">
+                    <h4>{editingCompoundRule ? 'Edit Compound Rule' : 'New Compound Rule'}</h4>
+                    <div className="compound_form_group">
+                      <label>Rule Name</label>
+                      <input
+                        type="text"
+                        value={compoundFormData.name}
+                        onChange={e => setCompoundFormData({ ...compoundFormData, name: e.target.value })}
+                        placeholder="e.g. Multi-System Failure"
+                      />
+                    </div>
+                    <div className="compound_form_group">
+                      <label>Description (optional)</label>
+                      <input
+                        type="text"
+                        value={compoundFormData.description}
+                        onChange={e => setCompoundFormData({ ...compoundFormData, description: e.target.value })}
+                        placeholder="Optional description"
+                      />
+                    </div>
+                    <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                      <div className="compound_form_group">
+                        <label>Trigger when</label>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <input
+                            type="number"
+                            min="1"
+                            value={compoundFormData.threshold_count}
+                            onChange={e => setCompoundFormData({ ...compoundFormData, threshold_count: parseInt(e.target.value) || 1 })}
+                            style={{ width: '70px' }}
+                          />
+                          <span style={{ color: '#a0a0a0', whiteSpace: 'nowrap' }}>or more distinct alerts are active</span>
+                        </div>
+                      </div>
+                      <div className="compound_form_group">
+                        <label>Within</label>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <input
+                            type="number"
+                            min="1"
+                            value={compoundFormData.time_window_mins}
+                            onChange={e => setCompoundFormData({ ...compoundFormData, time_window_mins: parseInt(e.target.value) || 1 })}
+                            style={{ width: '80px' }}
+                          />
+                          <span style={{ color: '#a0a0a0' }}>minutes</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="compound_form_group">
+                      <label className="checkbox_label">
+                        <input
+                          type="checkbox"
+                          checked={compoundFormData.enabled}
+                          onChange={e => setCompoundFormData({ ...compoundFormData, enabled: e.target.checked })}
+                        />
+                        Enabled
+                      </label>
+                    </div>
+                    <div style={{ display: 'flex', gap: '10px', marginTop: '15px' }}>
+                      <button className="btn_primary" onClick={handleSaveCompoundRule} disabled={savingCompound}>
+                        {savingCompound ? 'Saving...' : (editingCompoundRule ? 'Update Rule' : 'Create Rule')}
+                      </button>
+                      <button className="btn_secondary" onClick={handleCancelCompoundRule} disabled={savingCompound}>
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {loadingCompoundRules ? (
+                  <div style={{ textAlign: 'center', padding: '40px', color: '#757575' }}>
+                    Loading compound rules...
+                  </div>
+                ) : compoundRules.length === 0 ? (
+                  <div style={{ textAlign: 'center', padding: '40px', color: '#757575' }}>
+                    No compound rules configured for this vessel
+                  </div>
+                ) : (
+                  <table className="user_table">
+                    <thead>
+                      <tr>
+                        <th>Rule Name</th>
+                        <th>Threshold</th>
+                        <th>Time Window</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {compoundRules.map(rule => (
+                        <tr key={rule.id}>
+                          <td>{rule.name}</td>
+                          <td>{rule.threshold_count} alerts</td>
+                          <td>{rule.time_window_mins} mins</td>
+                          <td>
+                            <span className={`status_badge ${rule.enabled ? 'status_safe' : 'status_offline'}`}>
+                              {rule.enabled ? 'Enabled' : 'Disabled'}
+                            </span>
+                          </td>
+                          <td>
+                            {isAdmin && (
+                              <>
+                                <button
+                                  className="action_btn"
+                                  onClick={() => handleEditCompoundRule(rule)}
+                                  style={{ marginRight: '5px' }}
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  className="action_btn delete"
+                                  onClick={() => handleDeleteCompoundRule(rule.id)}
+                                >
+                                  Delete
+                                </button>
+                              </>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+
+                {/* Active Compound Alerts */}
+                {activeCompoundAlerts.length > 0 && (
+                  <div style={{ marginTop: '25px' }}>
+                    <h4 style={{ marginBottom: '15px', color: '#dc3545' }}>⚠️ Active Compound Alerts ({activeCompoundAlerts.length})</h4>
+                    <table className="user_table">
+                      <thead>
+                        <tr>
+                          <th>Alert</th>
+                          <th>First Triggered</th>
+                          <th>Alert Count</th>
+                          <th>Status</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {activeCompoundAlerts.map(alert => (
+                          <tr key={alert.id}>
+                            <td>{alert.alert_text}</td>
+                            <td style={{ fontSize: '0.85rem', color: '#a0a0a0' }}>
+                              {new Date(alert.first_triggered_at).toLocaleString()}
+                            </td>
+                            <td>{alert.triggered_alert_count}</td>
+                            <td>
+                              <span className={`status_badge ${alert.status === 'active' ? 'status_alert' : 'status_offline'}`}>
+                                {alert.status}
+                              </span>
+                            </td>
+                            <td>
+                              {isSupervisor && alert.status === 'active' && (
+                                <button
+                                  className="action_btn"
+                                  onClick={() => handleAcknowledgeCompoundAlert(alert.id)}
+                                  style={{ marginRight: '5px' }}
+                                >
+                                  Acknowledge
+                                </button>
+                              )}
+                              {isSupervisor && (
+                                <button
+                                  className="action_btn delete"
+                                  onClick={() => handleResolveCompoundAlert(alert.id)}
+                                >
+                                  Resolve
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

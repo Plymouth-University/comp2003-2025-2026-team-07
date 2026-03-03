@@ -105,6 +105,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  -webkit-backdrop-filter: blur(5px);
   backdrop-filter: blur(5px);
   animation: fadeIn 0.3s ease-out;
 }
@@ -174,4 +175,60 @@
     transform: translateY(0);
     opacity: 1;
   }
+}
+
+/* Compound alert badge on vessel cards */
+.compound_badge {
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: rgba(255, 165, 0, 0.2);
+  color: #ffa500;
+  border: 1px solid rgba(255, 165, 0, 0.4);
+  white-space: nowrap;
+}
+
+/* Inline compound rule form */
+.compound_form {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.compound_form h4 {
+  margin: 0 0 15px 0;
+  color: #e0e0e0;
+  font-size: 1rem;
+}
+
+.compound_form_group {
+  margin-bottom: 12px;
+}
+
+.compound_form_group label {
+  display: block;
+  margin-bottom: 6px;
+  color: #a0a0a0;
+  font-size: 0.9rem;
+}
+
+.compound_form_group input[type="text"],
+.compound_form_group input[type="number"] {
+  width: 100%;
+  padding: 8px 12px;
+  background-color: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: #e0e0e0;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+.compound_form_group input[type="text"]:focus,
+.compound_form_group input[type="number"]:focus {
+  outline: none;
+  border-color: #2196F3;
 }
