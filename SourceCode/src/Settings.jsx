@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './Settings.css';
 import VesselForm from './VesselForm';
 import AlertBuilder from './AlertBuilder';
+import UserSettings from './UserSettings';
 
 function Settings() {
     const [activeSubTab, setActiveSubTab] = useState('add_vessel');
@@ -12,6 +13,8 @@ function Settings() {
                 return <VesselForm />;
             case 'alert_builder':
                 return <AlertBuilder />;
+            case 'user_settings':
+                return <UserSettings />;
             default:
                 return <VesselForm />;
         }
@@ -32,6 +35,12 @@ function Settings() {
                     onClick={() => setActiveSubTab('alert_builder')}
                 >
                     Alert Builder
+                </button>
+                <button
+                    className={`settings_nav_btn ${activeSubTab === 'user_settings' ? 'active' : ''}`}
+                    onClick={() => setActiveSubTab('user_settings')}
+                >
+                    User Settings
                 </button>
             </div>
             <div className="settings_content">

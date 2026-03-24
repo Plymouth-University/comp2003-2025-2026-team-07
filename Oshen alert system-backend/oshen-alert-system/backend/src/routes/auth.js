@@ -9,6 +9,7 @@ const {
   hashPassword,
   comparePassword
 } = require('../middleware/auth');
+const pagerService = require('../services/pagerService');
 
 // POST /api/auth/login - User login
 router.post('/login', async (req, res, next) => {
@@ -201,25 +202,79 @@ router.get('/users', authenticateToken, requireSupervisor, async (req, res, next
   }
 });
 
-// DELETE /api/auth/users/:id - Delete user (Admin only)
-router.delete('/users/:id', authenticateToken, requireAdmin, async (req, res, next) => {
+// PUT /api/auth/users/:id/pager-id - Update user's pager_id (Self or Admin)
+router.put('/users/:id/pager-id', authenticateToken, async (req, res, next) => {
   try {
     const userId = parseInt(req.params.id);
+    const { pager_id } = req.body;
 
-    // Prevent admin from deleting themselves
-    if (userId === req.user.id) {
-      return res.status(400).json({ 
-        error: 'Cannot delete your own account' 
+    // Validate pager_id format
+    if (!pager_id || typeof pager_id !== 'string') {
+      return res.status(400).json({
+        error: 'pager_id is required and must be a string'
       });
     }
 
-    await prisma.users.delete({
+    if (pager_id.length > 20) {
+      return res.status(400).json({
+        error: 'pager_id must be 20 characters or less'
+      });
+    }
+
+    if (!/^[a-zA-Z0-9]+$/.test(pager_id)) {
+      return res.status(400).json({
+        error: 'pager_id must contain only alphanumeric characters'
+      });
+    }
+
+    // Check permissions: users can update themselves, admins can update anyone
+    if (req.user.id !== userId && req.user.role !== 'admin') {
+      return res.status(403).json({
+        error: 'You can only update your own pager_id'
+      });
+    }
+
+    // Check if user exists
+    const user = await prisma.users.findUnique({
       where: { id: userId }
     });
 
-    res.json({ 
+    if (!user) {
+      return res.status(404).json({
+        error: 'User not found'
+      });
+    }
+
+    // Test the pager_id with PAGEM API before saving
+    console.log(`Testing pager_id ${pager_id} for user ${user.username}...`);
+    const testResult = await pagerService.sendPage(pager_id, 'OSHEN TEST: Pager ID validation successful');
+
+    if (!testResult.success) {
+      return res.status(400).json({
+        error: `Invalid pager_id: ${testResult.error}`,
+        details: 'The pager_id could not be validated with PAGEM API. Please check your Pagee API ID.'
+      });
+    }
+
+    // Update the user's pager_id
+    const updatedUser = await prisma.users.update({
+      where: { id: userId },
+      data: { pager_id: pager_id },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        role: true,
+        pager_id: true
+      }
+    });
+
+    console.log(`✅ Updated pager_id for user ${updatedUser.username} to ${pager_id}`);
+
+    res.json({
       success: true,
-      message: 'User deleted successfully' 
+      message: 'Pager ID updated successfully',
+      data: updatedUser
     });
   } catch (error) {
     next(error);

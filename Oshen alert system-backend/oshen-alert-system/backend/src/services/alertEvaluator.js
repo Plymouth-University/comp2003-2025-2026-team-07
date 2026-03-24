@@ -152,6 +152,11 @@ class AlertEvaluator {
       });
 
       console.log(`🚨 NEW ALERT #${newAlert.id}: ${alertText}`);
+
+      // Send Pagem notification to vessel's responsible supervisor (new alerts only)
+      const pagerService = require('./pagerService');
+      await pagerService.sendAlert(newAlert, vessel);
+
       return newAlert;
     }
   }

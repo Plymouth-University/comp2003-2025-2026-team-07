@@ -77,7 +77,14 @@ function App() {
         fontSize: '1.2rem'
       }}>
         <div style={{ textAlign: 'center' }}>
-          <div style={{ marginBottom: '20px' }}>🔄</div>
+          <div style={{
+            marginBottom: '20px',
+            width: '36px', height: '36px', margin: '0 auto 20px',
+            border: '3px solid rgba(255,255,255,0.15)',
+            borderTop: '3px solid #38bdf8',
+            borderRadius: '50%',
+            animation: 'spin 0.8s linear infinite'
+          }}></div>
           Loading...
         </div>
       </div>

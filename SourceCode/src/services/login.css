@@ -85,8 +85,9 @@
 
 .input_group input:focus {
   outline: none;
-  border-color: #2a5298;
-  background-color: rgba(42, 82, 152, 0.1);
+  border-color: #2196F3;
+  background-color: rgba(33, 150, 243, 0.08);
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.12);
 }
 
 .input_group input:disabled {
@@ -127,14 +128,15 @@
 
 .login_button {
   padding: 14px;
-  background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+  background: #2196F3;
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
+  letter-spacing: 0.04em;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -143,9 +145,9 @@
 }
 
 .login_button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #1e3c72 0%, #0f2847 100%);
+  background: #1976D2;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(42, 82, 152, 0.4);
+  box-shadow: 0 6px 18px rgba(33, 150, 243, 0.38);
 }
 
 .login_button:active:not(:disabled) {

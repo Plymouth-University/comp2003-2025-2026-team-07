@@ -108,6 +108,10 @@ class AlertService {
     if (filters.status) {
       where.status = filters.status;
     }
+
+    if (filters.pagem_sent !== undefined) {
+      where.pagem_sent = filters.pagem_sent === 'true';
+    }
     
     if (filters.from_date) {
       where.first_triggered_at = {  // ← FIXED: was first_triggered

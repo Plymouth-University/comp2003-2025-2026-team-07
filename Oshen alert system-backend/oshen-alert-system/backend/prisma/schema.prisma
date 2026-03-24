@@ -42,6 +42,7 @@ model alert_history {
   resolved_at                            DateTime?    @db.Timestamptz(6)
   pagem_sent                             Boolean      @default(false)
   pagem_sent_at                          DateTime?    @db.Timestamptz(6)
+  pagem_event_id                         String?      @db.VarChar(50)
   resolved_by                            Int?
   users                                  users?       @relation(fields: [acknowledged_by], references: [id], onUpdate: NoAction)
   alert_rules                            alert_rules? @relation(fields: [alert_rule_id], references: [id], onUpdate: NoAction)

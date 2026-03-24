@@ -1,6 +1,7 @@
 // Try ngrok first (for development), fallback to localhost (for markers/submission)
 const API_URLS = [
   'https://ares-swirlier-yulanda.ngrok-free.dev/api',
+  'http://localhost:3001/api',
   'http://localhost:3000/api'
 ];
 
@@ -174,6 +175,22 @@ class ApiService {
     return this.request('/geofences/vessel/' + vesselId);
   }
 
+  async createGeofence(data) {
+    return this.request('/geofences', { method: 'POST', body: JSON.stringify(data) });
+  }
+
+  async updateGeofence(id, data) {
+    return this.request('/geofences/' + id, { method: 'PUT', body: JSON.stringify(data) });
+  }
+
+  async deleteGeofence(id) {
+    return this.request('/geofences/' + id, { method: 'DELETE' });
+  }
+
+  async muteGeofence(id, data) {
+    return this.request('/geofences/' + id + '/mute', { method: 'PATCH', body: JSON.stringify(data) });
+  }
+
   async getAlertRules(filters = {}) {
     const params = new URLSearchParams(filters);
     return this.request('/alerts/rules?' + params);
@@ -228,6 +245,12 @@ class ApiService {
     return this.request('/telemetry?vessel_id=' + vesselId + '&limit=' + limit);
   }
 
+  async getTelemetryForPeriod(vesselId, hours) {
+    // Scale the record limit with the time window (assume up to ~10 reports/hr, 2× buffer)
+    const limit = Math.min(Math.ceil(hours * 10 * 2), 10000);
+    return this.request('/telemetry?vessel_id=' + vesselId + '&limit=' + limit);
+  }
+
   // User Management APIs
   async getCurrentUser() {
     return this.request('/auth/me');
@@ -247,6 +270,13 @@ class ApiService {
   async deleteUser(userId) {
     return this.request('/auth/users/' + userId, {
       method: 'DELETE'
+    });
+  }
+
+  async updatePagerId(userId, pagerId) {
+    return this.request('/auth/users/' + userId + '/pager-id', {
+      method: 'PUT',
+      body: JSON.stringify({ pager_id: pagerId })
     });
   }
 

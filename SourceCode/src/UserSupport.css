@@ -76,7 +76,7 @@
 .action_btn {
   background: transparent;
   border: none;
-  color: #007bff;
+  color: #2196F3;
   cursor: pointer;
   font-weight: 500;
   padding: 5px 10px;
@@ -94,6 +94,33 @@
 
 .action_btn.delete:hover {
   background-color: rgba(220, 53, 69, 0.1);
+}
+
+/* Empty state */
+.empty_state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 14px;
+  text-align: center;
+}
+
+.empty_state_icon { opacity: 0.25; }
+
+.empty_state h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ccc;
+}
+
+.empty_state p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: #666;
+  line-height: 1.5;
 }
 
 /* Modal Overlay */

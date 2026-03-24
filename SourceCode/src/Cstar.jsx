@@ -363,7 +363,10 @@ function Cstar({ currentUser }) {
   if (loading) {
     return (
       <div className='content_container'>
-        <div className="loading_message">🔄 Loading vessels from backend...</div>
+        <div className="loading_container">
+          <div className="loading_spinner"></div>
+          <p className="loading_text">Loading vessels from backend...</p>
+        </div>
       </div>
     );
   }
@@ -372,7 +375,10 @@ function Cstar({ currentUser }) {
     return (
       <div className='content_container'>
         <div className="error_message">
-          <h3>⚠️ Backend Connection Error</h3>
+          <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+            Backend Connection Error
+          </h3>
           <p>{error}</p>
           <p style={{ marginTop: '15px', fontSize: '0.9rem' }}>Make sure:</p>
           <ul style={{ textAlign: 'left', marginTop: '10px', display: 'inline-block' }}>
@@ -380,7 +386,7 @@ function Cstar({ currentUser }) {
             <li>ngrok tunnel is active</li>
             <li>API URL is correct in api.js</li>
           </ul>
-          <button onClick={loadVessels}>🔄 Retry Connection</button>
+          <button onClick={loadVessels} style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '0 auto' }}><span className="inline_spinner"></span>Retry Connection</button>
         </div>
       </div>
     );
@@ -390,8 +396,9 @@ function Cstar({ currentUser }) {
     <div className='content_container'>
       <div className="vessel_header" style={{ borderBottom: 'none' }}>
         <h1>Fleet Dashboard</h1>
-        <div className="status_badge status_safe" style={{ fontSize: '1rem' }}>
-          Active Vessels: {vessels.filter(v => v.status !== 'offline').length} / {vessels.length}
+        <div className="fleet_count_badge">
+          <span className="fcb_dot"></span>
+          {vessels.filter(v => v.status !== 'offline').length} / {vessels.length} Active
         </div>
       </div>
 
@@ -404,15 +411,26 @@ function Cstar({ currentUser }) {
             style={{ cursor: 'pointer' }}
           >
             <div className="vessel_header">
-              <h3 className="vessel_name">{vessel.name}</h3>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div className="vessel_card_icon">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill={vessel.status === 'safe' ? '#4CAF50' : vessel.status === 'alert' ? '#f44336' : '#6c757d'}>
+                    <path d="M20 21c-1.39 0-2.78-.47-4-1.32-2.44 1.71-5.56 1.71-8 0C6.78 20.53 5.39 21 4 21H2v2h2c1.25 0 2.45-.2 3.6-.54a9.43 9.43 0 0 0 8.8 0C17.55 22.8 18.75 23 20 23h2v-2h-2zM3.95 19H4c1.6 0 3.02-.88 4-2 .98 1.12 2.4 2 4 2s3.02-.88 4-2c.98 1.12 2.4 2 4 2h.05l1.89-6.68c.08-.26.06-.54-.06-.78s-.34-.42-.6-.5L20 10.62V6c0-1.1-.9-2-2-2h-3V1H9v3H6c-1.1 0-2 .9-2 2v4.62l-1.29.42c-.26.08-.47.26-.6.5s-.15.52-.06.78L3.95 19zM6 6h12v3.97L12 8 6 9.97V6z"/>
+                  </svg>
+                </div>
+                <h3 className="vessel_name">{vessel.name}</h3>
+              </div>
               <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
                 <span className={`status_badge ${getStatusClass(vessel.status)}`}>
                   {vessel.status}
-                  {vessel.emergency && ' 🚨'}
+                  {vessel.emergency && (
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="#f44336" style={{ marginLeft: '4px', verticalAlign: 'middle' }}>
+                      <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>
+                    </svg>
+                  )}
                 </span>
                 {vesselCompoundBadges[vessel.id] > 0 && (
                   <span className="compound_badge" title="Active compound alerts">
-                    🔗 {vesselCompoundBadges[vessel.id]}
+                    {vesselCompoundBadges[vessel.id]}
                   </span>
                 )}
               </div>
@@ -440,8 +458,12 @@ function Cstar({ currentUser }) {
       </div>
 
       {vessels.length === 0 && (
-        <div className="no_vessels_message">
-          <p>No vessels found in the system.</p>
+        <div className="empty_state">
+          <div className="empty_state_icon">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="#a0a0a0"><path d="M20 21c-1.39 0-2.78-.47-4-1.32-2.44 1.71-5.56 1.71-8 0C6.78 20.53 5.39 21 4 21H2v2h2c1.25 0 2.45-.2 3.6-.54a9.43 9.43 0 0 0 8.8 0C17.55 22.8 18.75 23 20 23h2v-2h-2zM3.95 19H4c1.6 0 3.02-.88 4-2 .98 1.12 2.4 2 4 2s3.02-.88 4-2c.98 1.12 2.4 2 4 2h.05l1.89-6.68c.08-.26.06-.54-.06-.78s-.34-.42-.6-.5L20 10.62V6c0-1.1-.9-2-2-2h-3V1H9v3H6c-1.1 0-2 .9-2 2v4.62l-1.29.42c-.26.08-.47.26-.6.5s-.15.52-.06.78L3.95 19zM6 6h12v3.97L12 8 6 9.97V6z"/></svg>
+          </div>
+          <h4>No vessels registered</h4>
+          <p>Add vessels via Settings to start tracking your fleet.</p>
         </div>
       )}
 
@@ -456,15 +478,20 @@ function Cstar({ currentUser }) {
                   IMEI: {selectedVessel.imei}
                 </p>
               </div>
-              <button onClick={handleCloseModal} style={{ fontSize: '24px', background: 'none', border: 'none', cursor: 'pointer' }}>×</button>
+              <button onClick={handleCloseModal} className="modal_close_btn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
             </div>
 
-            <div style={{ padding: '20px', overflowY: 'auto', flex: 1 }}>
+            <div className="modal_body">
               {isAdmin && (
                 <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: 'rgba(211, 47, 47, 0.1)', border: '1px solid #d32f2f', borderRadius: '8px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div>
-                      <strong style={{ color: '#d32f2f' }}>⚠️ Admin Actions</strong>
+                      <strong style={{ color: '#d32f2f', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#d32f2f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                        Admin Actions
+                      </strong>
                       <p style={{ margin: '5px 0 0 0', fontSize: '0.9rem', color: '#757575' }}>
                         Delete this vessel and all associated data
                       </p>
@@ -474,7 +501,8 @@ function Cstar({ currentUser }) {
                       onClick={() => handleDeleteVessel(selectedVessel.id, selectedVessel.name)}
                       style={{ padding: '10px 20px', fontSize: '16px' }}
                     >
-                      🗑️ Delete Vessel
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                      Delete Vessel
                     </button>
                   </div>
                 </div>
@@ -487,25 +515,32 @@ function Cstar({ currentUser }) {
                     className="btn_primary"
                     onClick={handleCreateAlert}
                   >
-                    ➕ Create Alert
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={{ marginRight: '5px' }}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Create Alert
                   </button>
                   <button
                     className="btn_secondary"
                     onClick={handleCopyToVessel}
                     disabled={vesselAlertRules.length === 0}
                   >
-                    📋 Copy Rules to Another Vessel
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '5px' }}><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    Copy Rules to Another Vessel
                   </button>
                 </div>
               </div>
 
               {loadingRules ? (
-                <div style={{ textAlign: 'center', padding: '40px', color: '#757575' }}>
-                  Loading alert rules...
+                <div className="loading_container">
+                  <div className="loading_spinner"></div>
+                  <p className="loading_text">Loading alert rules...</p>
                 </div>
               ) : vesselAlertRules.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '40px', color: '#757575' }}>
-                  No alert rules configured for this vessel
+                <div className="empty_state">
+                  <div className="empty_state_icon">
+                    <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#a0a0a0" strokeWidth="1.5" strokeLinecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                  </div>
+                  <h4>No alert rules configured</h4>
+                  <p>Use Create Alert to set up monitoring thresholds for this vessel.</p>
                 </div>
               ) : (
                 <table className="user_table">
@@ -558,7 +593,8 @@ function Cstar({ currentUser }) {
                   <h3>Compound Rules ({compoundRules.length})</h3>
                   {isAdmin && (
                     <button className="btn_primary" onClick={handleCreateCompoundRule}>
-                      ➕ Create Compound Rule
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" style={{ marginRight: '5px' }}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                      Create Compound Rule
                     </button>
                   )}
                 </div>
@@ -692,7 +728,10 @@ function Cstar({ currentUser }) {
                 {/* Active Compound Alerts */}
                 {activeCompoundAlerts.length > 0 && (
                   <div style={{ marginTop: '25px' }}>
-                    <h4 style={{ marginBottom: '15px', color: '#dc3545' }}>⚠️ Active Compound Alerts ({activeCompoundAlerts.length})</h4>
+                    <h4 style={{ marginBottom: '15px', color: '#dc3545', display: 'flex', alignItems: 'center', gap: '7px' }}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc3545" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                      Active Compound Alerts ({activeCompoundAlerts.length})
+                    </h4>
                     <table className="user_table">
                       <thead>
                         <tr>
@@ -802,7 +841,7 @@ function Cstar({ currentUser }) {
                 fontSize: '20px',
                 fontWeight: '600'
               }}>
-                🔄 Copying rules...
+                <span className="inline_spinner"></span>Copying rules...
               </div>
             )}
 

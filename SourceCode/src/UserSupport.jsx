@@ -77,8 +77,9 @@ function UserSupport({ currentUser }) {
   if (loading) {
     return (
       <div className='content_container'>
-        <div style={{ textAlign: 'center', padding: '50px' }}>
-          <h2>🔄 Loading users...</h2>
+        <div className="loading_container">
+          <div className="loading_spinner"></div>
+          <p className="loading_text">Loading users...</p>
         </div>
       </div>
     );
@@ -90,8 +91,9 @@ function UserSupport({ currentUser }) {
         <div className="user_header">
           <div>
             <h1>User Management</h1>
-            <p style={{ color: '#f44336', margin: '5px 0 0 0' }}>
-              ⚠️ Supervisor or Admin access required to view users
+            <p style={{ color: '#f44336', margin: '5px 0 0 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f44336" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              Supervisor or Admin access required to view users
             </p>
           </div>
         </div>
@@ -190,8 +192,12 @@ function UserSupport({ currentUser }) {
         </table>
 
         {users.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '40px', color: '#757575' }}>
-            No users found
+          <div className="empty_state">
+            <div className="empty_state_icon">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#a0a0a0" strokeWidth="1.5" strokeLinecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h4>No users found</h4>
+            <p>Add team members using the Add User button above.</p>
           </div>
         )}
       </div>

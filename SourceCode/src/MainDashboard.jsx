@@ -14,7 +14,7 @@ function MainDashboard({ user, onLogout }) {
       case 'cstars':
         return <Cstar currentUser={user} />;
       case 'geofences':
-        return <Geofences />;
+        return <Geofences currentUser={user} />;
       case 'usersupport':
         return <UserSupport currentUser={user} />;
       case 'settings':
