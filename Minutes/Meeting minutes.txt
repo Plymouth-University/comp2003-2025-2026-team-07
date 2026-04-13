@@ -183,3 +183,16 @@ Notes:
 
 * Good progress
 * Plan for later development
+
+
+Client meeting 6
+
+Location: Virtual
+
+Time: 12:00 - 12:20
+
+Date: 23 March 2026
+
+Notes:
+* Close to completion
+* Final tweaks are in progress
