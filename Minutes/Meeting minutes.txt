@@ -169,3 +169,17 @@ Notes:
 * MVP created 
 * Many met requirements 
 * Good and usable but can be improved
+
+
+Client meeting 5
+
+Location: RLB Container Café
+
+Time: 11:00 - 11:40
+
+Date: 16 February 2026
+
+Notes:
+
+* Good progress
+* Plan for later development
