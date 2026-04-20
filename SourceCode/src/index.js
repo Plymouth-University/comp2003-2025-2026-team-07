@@ -26,22 +26,9 @@ function App() {
 
       // If token exists, verify it's still valid
       try {
-        // Try to fetch user info to verify token
-        const response = await fetch('https://ares-swirlier-yulanda.ngrok-free.dev/api/auth/me', {
-          headers: {
-            'Authorization': 'Bearer ' + token,
-            'ngrok-skip-browser-warning': 'true'
-          }
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setUser(data.data);
-          setIsAuthenticated(true);
-        } else {
-          // Token invalid - clear it
-          api.clearToken();
-        }
+        const data = await api.getCurrentUser();
+        setUser(data.data);
+        setIsAuthenticated(true);
       } catch (error) {
         // Backend is offline or token is invalid
         console.log('Could not verify token, logging out');

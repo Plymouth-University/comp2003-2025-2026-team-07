@@ -322,6 +322,52 @@ class ApiService {
       method: 'POST'
     });
   }
+
+  async triggerTestAlert(vesselId, message) {
+    return this.request('/alerts/trigger-test', {
+      method: 'POST',
+      body: JSON.stringify({ vessel_id: vesselId, ...(message ? { message } : {}) })
+    });
+  }
+
+  async getPageLog(filters = {}) {
+    const params = new URLSearchParams(filters);
+    const qs = params.toString();
+    return this.request('/pagem/page-log' + (qs ? '?' + qs : ''));
+  }
+
+  async refreshPageLogEntry(id) {
+    return this.request('/pagem/page-log/' + id + '/refresh');
+  }
+
+  async getPagemStatus() {
+    return this.request('/pagem/status');
+  }
+
+  async getPagemApiKey() {
+    return this.request('/pagem/api-key');
+  }
+
+  async updatePagemApiKey(apiKey) {
+    return this.request('/pagem/api-key', {
+      method: 'PUT',
+      body: JSON.stringify({ api_key: apiKey })
+    });
+  }
+
+  async sendTestPage(pagerId = null) {
+    return this.request('/pagem/test-page', {
+      method: 'POST',
+      body: JSON.stringify(pagerId ? { pager_id: pagerId } : {})
+    });
+  }
+
+  async getPageStatus(eventId) {
+    return this.request('/pagem/page-status', {
+      method: 'POST',
+      body: JSON.stringify({ eventId })
+    });
+  }
 }
 
 export default new ApiService();

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import api from './services/api';
 import './Cstar.css';
 import AlertBuilder from './AlertBuilder';
+import VesselSettingsModal from './VesselSettingsModal';
 
 function Cstar({ currentUser }) {
   const [vessels, setVessels] = useState([]);
@@ -25,6 +26,7 @@ function Cstar({ currentUser }) {
   const [vesselCompoundBadges, setVesselCompoundBadges] = useState({});
   const [compoundFormData, setCompoundFormData] = useState({ name: '', description: '', threshold_count: 2, time_window_mins: 60, enabled: true });
   const [savingCompound, setSavingCompound] = useState(false);
+  const [editingVessel, setEditingVessel] = useState(null);
 
   const isAdmin = currentUser && currentUser.role === 'admin';
   const isSupervisor = currentUser && (currentUser.role === 'supervisor' || currentUser.role === 'admin');
@@ -276,6 +278,17 @@ function Cstar({ currentUser }) {
     }
   };
 
+  const handleVesselSave = async (vesselData) => {
+    try {
+      await api.updateVessel(vesselData.id, vesselData);
+      setEditingVessel(null);
+      loadVessels();
+    } catch (err) {
+      console.error('Error updating vessel:', err);
+      alert('Error saving vessel: ' + err.message);
+    }
+  };
+
   // Compound rule handlers
   const handleCreateCompoundRule = () => {
     setEditingCompoundRule(null);
@@ -503,6 +516,13 @@ function Cstar({ currentUser }) {
                     >
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginRight: '6px' }}><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
                       Delete Vessel
+                    </button>
+                    <button
+                      className="btn_secondary"
+                      onClick={() => setEditingVessel(selectedVessel)}
+                      style={{ padding: '10px 20px', fontSize: '16px' }}
+                    >
+                      Edit Settings
                     </button>
                   </div>
                 </div>
@@ -871,6 +891,14 @@ function Cstar({ currentUser }) {
             />
           </div>
         </div>
+      )}
+
+      {editingVessel && (
+        <VesselSettingsModal
+          vessel={editingVessel}
+          onClose={() => setEditingVessel(null)}
+          onSave={handleVesselSave}
+        />
       )}
     </div>
   );

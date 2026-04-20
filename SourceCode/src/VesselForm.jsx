@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Forms.css';
 import api from './services/api';
 
@@ -8,10 +8,19 @@ function VesselForm() {
         imei: '',
         atSeaStatus: true,
         escalationThreshold: 3,
-        repeatIntervalMins: 5
+        repeatIntervalMins: 5,
+        primarySupervisorId: '',
+        secondarySupervisorId: ''
     });
+    const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    useEffect(() => {
+        api.getAllUsers()
+            .then(res => setUsers(res.data || []))
+            .catch(() => {});
+    }, []);
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -27,26 +36,28 @@ function VesselForm() {
         setError(null);
 
         try {
-            // Convert form field names to backend field names
             const vesselData = {
                 name: formData.name.trim(),
                 imei: formData.imei.trim(),
                 at_sea_status: formData.atSeaStatus,
                 escalation_threshold: parseInt(formData.escalationThreshold),
-                repeat_interval_mins: parseInt(formData.repeatIntervalMins)
+                repeat_interval_mins: parseInt(formData.repeatIntervalMins),
+                primary_supervisor_id: formData.primarySupervisorId ? parseInt(formData.primarySupervisorId) : null,
+                secondary_supervisor_id: formData.secondarySupervisorId ? parseInt(formData.secondarySupervisorId) : null
             };
 
             await api.createVessel(vesselData);
 
             alert('Vessel created successfully! Go to the Cstars tab to view it.');
 
-            // Reset form
             setFormData({
                 name: '',
                 imei: '',
                 atSeaStatus: true,
                 escalationThreshold: 3,
-                repeatIntervalMins: 5
+                repeatIntervalMins: 5,
+                primarySupervisorId: '',
+                secondarySupervisorId: ''
             });
         } catch (err) {
             console.error('Error creating vessel:', err);
@@ -58,13 +69,14 @@ function VesselForm() {
     };
 
     const handleCancel = () => {
-        // Reset form to initial values
         setFormData({
             name: '',
             imei: '',
             atSeaStatus: true,
             escalationThreshold: 3,
-            repeatIntervalMins: 5
+            repeatIntervalMins: 5,
+            primarySupervisorId: '',
+            secondarySupervisorId: ''
         });
         setError(null);
     };
@@ -146,6 +158,40 @@ function VesselForm() {
                             />
                             At Sea Status
                         </label>
+                    </div>
+
+                    <div className="form_group">
+                        <label htmlFor="primarySupervisorId">Primary Supervisor</label>
+                        <select
+                            id="primarySupervisorId"
+                            name="primarySupervisorId"
+                            value={formData.primarySupervisorId}
+                            onChange={handleChange}
+                        >
+                            <option value="">— None —</option>
+                            {users.map(u => (
+                                <option key={u.id} value={u.id}>{u.username} ({u.role})</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="form_group">
+                        <label htmlFor="secondarySupervisorId">Secondary Supervisor</label>
+                        <select
+                            id="secondarySupervisorId"
+                            name="secondarySupervisorId"
+                            value={formData.secondarySupervisorId}
+                            onChange={handleChange}
+                        >
+                            <option value="">— None —</option>
+                            {users.map(u => (
+                                <option key={u.id} value={u.id}>{u.username} ({u.role})</option>
+                            ))}
+                        </select>
+                        <small className="form_help">
+                            Assigned supervisors will receive a Pagem notification when this vessel triggers an alert.
+                            Make sure each supervisor has a Pager ID set in their User Settings.
+                        </small>
                     </div>
 
                     <div className="form_actions">

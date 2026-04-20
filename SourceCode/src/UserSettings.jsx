@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './Settings.css';
 import api from './services/api';
 
@@ -8,6 +8,9 @@ function UserSettings() {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
+    const [testLoading, setTestLoading] = useState(false);
+    const [testMessage, setTestMessage] = useState('');
+    const [testError, setTestError] = useState('');
 
     useEffect(() => {
         loadUserProfile();
@@ -15,7 +18,7 @@ function UserSettings() {
 
     const loadUserProfile = async () => {
         try {
-            const response = await api.get('/auth/me');
+            const response = await api.getCurrentUser();
             setUser(response.data);
             setPagerId(response.data.pager_id || '');
         } catch (err) {
@@ -31,13 +34,31 @@ function UserSettings() {
 
         try {
             const response = await api.updatePagerId(user.id, pagerId);
-
             setMessage('Pager ID updated successfully!');
             setUser(response.data);
         } catch (err) {
-            setError(err.response?.data?.error || 'Failed to update pager ID');
+            setError(err.message || 'Failed to update pager ID');
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleSendTestPage = async () => {
+        setTestLoading(true);
+        setTestMessage('');
+        setTestError('');
+
+        try {
+            const response = await api.sendTestPage(pagerId || user?.pager_id);
+            if (response.success) {
+                setTestMessage('Test page sent! Check your Pagem app. Event ID: ' + (response.data?.eventId || response.data?.event_id || 'N/A'));
+            } else {
+                setTestError(response.error || response.message || 'Test page failed');
+            }
+        } catch (err) {
+            setTestError(err.message || 'Failed to send test page');
+        } finally {
+            setTestLoading(false);
         }
     };
 
@@ -100,6 +121,23 @@ function UserSettings() {
 
             {message && <div className="success_message">{message}</div>}
             {error && <div className="error_message">{error}</div>}
+
+            <div className="pager_test_section">
+                <h4>Test Page</h4>
+                <p className="form_description">
+                    Send a test page to verify your Pager ID is correctly configured.
+                </p>
+                <button
+                    type="button"
+                    onClick={handleSendTestPage}
+                    disabled={testLoading || !pagerId}
+                    className="update_btn"
+                >
+                    {testLoading ? 'Sending...' : 'Send Test Page'}
+                </button>
+                {testMessage && <div className="success_message" style={{ marginTop: '10px' }}>{testMessage}</div>}
+                {testError && <div className="error_message" style={{ marginTop: '10px' }}>{testError}</div>}
+            </div>
         </div>
     );
 }

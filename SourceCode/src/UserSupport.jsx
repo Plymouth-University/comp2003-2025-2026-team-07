@@ -3,6 +3,273 @@ import './UserSupport.css';
 import UserForm from './UserForm';
 import api from './services/api';
 
+function TriggerTestAlertPanel() {
+  const [vessels, setVessels]   = useState([]);
+  const [vesselId, setVesselId] = useState('');
+  const [message, setMessage]   = useState('');
+  const [sending, setSending]   = useState(false);
+  const [result, setResult]     = useState(null); // { type: 'success'|'warn'|'error', text, pages }
+
+  useEffect(() => {
+    api.getVessels()
+      .then(res => setVessels(res?.data || []))
+      .catch(() => {});
+  }, []);
+
+  const handleSend = async (e) => {
+    e.preventDefault();
+    if (!vesselId) return;
+    setSending(true);
+    setResult(null);
+    try {
+      const res = await api.triggerTestAlert(vesselId, message.trim() || undefined);
+      const d = res?.data;
+      const paged = d?.pagesDispatched || [];
+      const successCount = paged.filter(p => p.success).length;
+      if (successCount > 0) {
+        setResult({
+          type: 'success',
+          text: `Alert created · ${successCount} page${successCount !== 1 ? 's' : ''} dispatched`,
+          pages: paged,
+        });
+      } else if (paged.length === 0) {
+        setResult({ type: 'warn', text: 'Alert created but no supervisors with a pager ID were found.', pages: [] });
+      } else {
+        setResult({ type: 'warn', text: 'Alert created but all pages failed to send.', pages: paged });
+      }
+    } catch (err) {
+      setResult({ type: 'error', text: err.message || 'Failed to trigger test alert' });
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const colors = { success: '#4caf50', warn: '#ff9800', error: '#f44336' };
+
+  return (
+    <div style={{
+      marginBottom: '20px',
+      padding: '16px 20px',
+      backgroundColor: 'rgba(255,255,255,0.04)',
+      border: '1px solid rgba(255,255,255,0.1)',
+      borderRadius: '10px',
+    }}>
+      <h3 style={{ margin: '0 0 4px 0', fontSize: '1rem', color: '#fff' }}>Trigger Test Alert</h3>
+      <p style={{ margin: '0 0 14px', fontSize: '0.85rem', color: '#a0a0a0' }}>
+        Creates a real alert record and pages all supervisors for the selected vessel — exercises the exact same code path as a live alert.
+      </p>
+      <form onSubmit={handleSend} style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'flex-end' }}>
+        <div style={{ flex: '1', minWidth: '180px' }}>
+          <label style={{ display: 'block', fontSize: '0.82rem', color: '#a0a0a0', marginBottom: '4px' }}>Vessel</label>
+          <select
+            value={vesselId}
+            onChange={e => setVesselId(e.target.value)}
+            required
+            style={{
+              width: '100%', padding: '8px 12px',
+              backgroundColor: 'rgba(255,255,255,0.07)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              borderRadius: '6px', color: '#fff', fontSize: '0.9rem',
+              boxSizing: 'border-box',
+            }}
+          >
+            <option value="">Select vessel…</option>
+            {vessels.map(v => (
+              <option key={v.id} value={v.id}>{v.name || v.vessel_name} ({v.imei})</option>
+            ))}
+          </select>
+        </div>
+        <div style={{ flex: '2', minWidth: '220px' }}>
+          <label style={{ display: 'block', fontSize: '0.82rem', color: '#a0a0a0', marginBottom: '4px' }}>
+            Message <span style={{ color: '#555' }}>(optional)</span>
+          </label>
+          <input
+            type="text"
+            value={message}
+            onChange={e => setMessage(e.target.value)}
+            placeholder="Leave blank for default test message"
+            style={{
+              width: '100%', padding: '8px 12px',
+              backgroundColor: 'rgba(255,255,255,0.07)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              borderRadius: '6px', color: '#fff', fontSize: '0.9rem',
+              boxSizing: 'border-box',
+            }}
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={sending || !vesselId}
+          style={{
+            padding: '8px 18px',
+            backgroundColor: sending || !vesselId ? 'rgba(33,150,243,0.3)' : '#2196F3',
+            color: '#fff', border: 'none', borderRadius: '6px',
+            cursor: sending || !vesselId ? 'not-allowed' : 'pointer',
+            fontSize: '0.9rem', whiteSpace: 'nowrap',
+          }}
+        >
+          {sending ? 'Sending…' : 'Send Test Alert'}
+        </button>
+      </form>
+
+      {result && (
+        <div style={{
+          marginTop: '12px', padding: '10px 14px',
+          backgroundColor: colors[result.type] + '1a',
+          border: '1px solid ' + colors[result.type],
+          borderRadius: '7px', color: colors[result.type], fontSize: '0.88rem',
+        }}>
+          <div style={{ fontWeight: 600, marginBottom: result.pages?.length ? '6px' : 0 }}>{result.text}</div>
+          {result.pages?.map((p, i) => (
+            <div key={i} style={{ fontSize: '0.82rem', color: p.success ? '#4caf50' : '#f44336', marginTop: '3px' }}>
+              {p.success ? '✓' : '✗'} {p.supervisor} (Pager {p.pageeId})
+              {!p.success && p.error ? ` — ${p.error}` : ''}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function PagemIntegrationPanel() {
+  const [status, setStatus] = useState(null);
+  const [keyInfo, setKeyInfo] = useState(null);
+  const [newKey, setNewKey] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [saveMsg, setSaveMsg] = useState(null); // { type: 'success'|'warn'|'error', text }
+
+  useEffect(() => {
+    api.getPagemStatus()
+      .then(res => setStatus(res?.data?.status))
+      .catch(() => setStatus('error'));
+    api.getPagemApiKey()
+      .then(res => setKeyInfo(res?.data))
+      .catch(() => setKeyInfo(null));
+  }, []);
+
+  const handleSave = async (e) => {
+    e.preventDefault();
+    if (!newKey.trim()) return;
+    setSaving(true);
+    setSaveMsg(null);
+    try {
+      const res = await api.updatePagemApiKey(newKey.trim());
+      setNewKey('');
+      if (res?.data) setKeyInfo(res.data);
+      const s = res?.data?.status;
+      if (s === 'connected') {
+        setStatus('connected');
+        setSaveMsg({ type: 'success', text: 'Key saved and validated — Pagem connected.' });
+      } else {
+        setStatus('error');
+        setSaveMsg({ type: 'warn', text: 'Key saved but Pagem rejected it: ' + (res?.message || 'unknown error') });
+      }
+    } catch (err) {
+      setSaveMsg({ type: 'error', text: 'Failed to save: ' + (err.message || 'unknown error') });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const statusColor = status === 'connected' ? '#4caf50' : status === 'disabled' ? '#ff9800' : '#f44336';
+  const statusLabel = status === 'connected' ? 'Connected' : status === 'disabled' ? 'Disabled' : status ? 'Error' : 'Checking…';
+
+  const msgColors = { success: '#4caf50', warn: '#ff9800', error: '#f44336' };
+
+  const lastUpdated = keyInfo?.updatedAt
+    ? new Date(keyInfo.updatedAt).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+    : null;
+
+  return (
+    <div style={{
+      marginBottom: '20px',
+      padding: '16px 20px',
+      backgroundColor: 'rgba(255,255,255,0.04)',
+      border: '1px solid rgba(255,255,255,0.1)',
+      borderRadius: '10px',
+    }}>
+      <h3 style={{ margin: '0 0 12px 0', fontSize: '1rem', color: '#fff' }}>Pagem Integration</h3>
+
+      <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap', marginBottom: '14px', fontSize: '0.9rem' }}>
+        <div>
+          <span style={{ color: '#a0a0a0' }}>Status: </span>
+          <span style={{ color: statusColor }}>● {statusLabel}</span>
+        </div>
+        {keyInfo?.maskedKey && (
+          <div>
+            <span style={{ color: '#a0a0a0' }}>Key: </span>
+            <span style={{ fontFamily: 'monospace', color: '#e0e0e0' }}>{keyInfo.maskedKey}</span>
+          </div>
+        )}
+        {keyInfo?.source && (
+          <div>
+            <span style={{ color: '#a0a0a0' }}>Source: </span>
+            <span style={{ color: '#e0e0e0', textTransform: 'capitalize' }}>{keyInfo.source}</span>
+            {lastUpdated && <span style={{ color: '#757575' }}> · Last updated: {lastUpdated}</span>}
+          </div>
+        )}
+      </div>
+
+      <form onSubmit={handleSave} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+        <div style={{ flex: '1', minWidth: '260px' }}>
+          <label style={{ display: 'block', fontSize: '0.85rem', color: '#a0a0a0', marginBottom: '4px' }}>
+            New API Key
+          </label>
+          <input
+            type="password"
+            value={newKey}
+            onChange={e => setNewKey(e.target.value)}
+            placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            autoComplete="new-password"
+            style={{
+              width: '100%',
+              padding: '8px 12px',
+              backgroundColor: 'rgba(255,255,255,0.07)',
+              border: '1px solid rgba(255,255,255,0.15)',
+              borderRadius: '6px',
+              color: '#fff',
+              fontSize: '0.9rem',
+              boxSizing: 'border-box',
+            }}
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={saving || !newKey.trim()}
+          style={{
+            marginTop: '22px',
+            padding: '8px 18px',
+            backgroundColor: saving || !newKey.trim() ? 'rgba(33,150,243,0.4)' : '#2196F3',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: saving || !newKey.trim() ? 'not-allowed' : 'pointer',
+            fontSize: '0.9rem',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {saving ? 'Saving…' : 'Save & Validate'}
+        </button>
+      </form>
+
+      {saveMsg && (
+        <div style={{
+          marginTop: '10px',
+          padding: '8px 12px',
+          backgroundColor: msgColors[saveMsg.type] + '1a',
+          border: '1px solid ' + msgColors[saveMsg.type],
+          borderRadius: '6px',
+          color: msgColors[saveMsg.type],
+          fontSize: '0.88rem',
+        }}>
+          {saveMsg.text}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function UserSupport({ currentUser }) {
   const [showModal, setShowModal] = useState(false);
   const [users, setUsers] = useState([]);
@@ -130,6 +397,9 @@ function UserSupport({ currentUser }) {
         </div>
       )}
 
+      {isAdmin && <PagemIntegrationPanel />}
+      {isAdmin && <TriggerTestAlertPanel />}
+
       <div className="user_table_container">
         <table className="user_table">
           <thead>
@@ -165,7 +435,12 @@ function UserSupport({ currentUser }) {
                       {user.role}
                     </span>
                   </td>
-                  <td style={{ fontFamily: 'monospace' }}>{user.pager_id || '-'}</td>
+                  <td>
+                    {user.pager_id
+                      ? <span style={{ fontFamily: 'monospace' }}>{user.pager_id}</span>
+                      : <span style={{ color: '#ff9800' }}>⚠ Not set</span>
+                    }
+                  </td>
                   {isAdmin && (
                     <td>
                       {!isCurrentUser ? (

@@ -156,7 +156,7 @@ function AlertBuilder({ vessel, onSave, onCancel, existingRule }) {
                         >
                             <option value=">">Greater Than (&gt;)</option>
                             <option value="<">Less Than (&lt;)</option>
-                            <option value="=">Equals (=)</option>
+                            <option value="==">Equals (=)</option>
                             <option value=">=">Greater or Equal (&gt;=)</option>
                             <option value="<=">Less or Equal (&lt;=)</option>
                         </select>

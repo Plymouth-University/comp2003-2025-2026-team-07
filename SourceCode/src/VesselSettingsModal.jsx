@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import './Forms.css'; // Reusing form styles
+import { useState, useEffect } from 'react';
+import './Forms.css';
+import api from './services/api';
 
 function VesselSettingsModal({ vessel, onClose, onSave }) {
     const [formData, setFormData] = useState({
@@ -7,17 +8,28 @@ function VesselSettingsModal({ vessel, onClose, onSave }) {
         imei: '',
         escalationThreshold: 3,
         repeatIntervalMins: 5,
-        atSeaStatus: true
+        atSeaStatus: true,
+        primarySupervisorId: '',
+        secondarySupervisorId: ''
     });
+    const [users, setUsers] = useState([]);
+
+    useEffect(() => {
+        api.getAllUsers()
+            .then(res => setUsers(res.data || []))
+            .catch(() => {});
+    }, []);
 
     useEffect(() => {
         if (vessel) {
             setFormData({
                 name: vessel.name || '',
                 imei: vessel.imei || '',
-                escalationThreshold: vessel.escalationThreshold || 3,
-                repeatIntervalMins: vessel.repeatIntervalMins || 5,
-                atSeaStatus: vessel.status !== 'offline' // deriving simple status for now
+                escalationThreshold: vessel.escalation_threshold || vessel.escalationThreshold || 3,
+                repeatIntervalMins: vessel.repeat_interval_mins || vessel.repeatIntervalMins || 5,
+                atSeaStatus: vessel.status !== 'offline',
+                primarySupervisorId: vessel.primary_supervisor_id || '',
+                secondarySupervisorId: vessel.secondary_supervisor_id || ''
             });
         }
     }, [vessel]);
@@ -32,7 +44,16 @@ function VesselSettingsModal({ vessel, onClose, onSave }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSave({ ...vessel, ...formData });
+        onSave({
+            ...vessel,
+            name: formData.name,
+            imei: formData.imei,
+            escalation_threshold: parseInt(formData.escalationThreshold),
+            repeat_interval_mins: parseInt(formData.repeatIntervalMins),
+            at_sea_status: formData.atSeaStatus,
+            primary_supervisor_id: formData.primarySupervisorId ? parseInt(formData.primarySupervisorId) : null,
+            secondary_supervisor_id: formData.secondarySupervisorId ? parseInt(formData.secondarySupervisorId) : null
+        });
     };
 
     if (!vessel) return null;
@@ -106,6 +127,40 @@ function VesselSettingsModal({ vessel, onClose, onSave }) {
                         </label>
                     </div>
 
+                    <div className="form_group">
+                        <label htmlFor="primarySupervisorId">Primary Supervisor</label>
+                        <select
+                            id="primarySupervisorId"
+                            name="primarySupervisorId"
+                            value={formData.primarySupervisorId}
+                            onChange={handleChange}
+                        >
+                            <option value="">— None —</option>
+                            {users.map(u => (
+                                <option key={u.id} value={u.id}>{u.username} ({u.role})</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="form_group">
+                        <label htmlFor="secondarySupervisorId">Secondary Supervisor</label>
+                        <select
+                            id="secondarySupervisorId"
+                            name="secondarySupervisorId"
+                            value={formData.secondarySupervisorId}
+                            onChange={handleChange}
+                        >
+                            <option value="">— None —</option>
+                            {users.map(u => (
+                                <option key={u.id} value={u.id}>{u.username} ({u.role})</option>
+                            ))}
+                        </select>
+                        <small className="form_help">
+                            Assigned supervisors will receive a Pagem notification when this vessel triggers an alert.
+                            Make sure each supervisor has a Pager ID set in their User Settings.
+                        </small>
+                    </div>
+
                     <div className="form_actions">
                         <button type="button" className="btn_secondary" onClick={onClose}>Cancel</button>
                         <button type="submit" className="btn_primary">Save Changes</button>
@@ -117,14 +172,3 @@ function VesselSettingsModal({ vessel, onClose, onSave }) {
 }
 
 export default VesselSettingsModal;
-
-//next steps
-//1. add vessel settings saving functionality
-//2. add vessel settings deletion functionality
-//3. add vessel settings editing functionality
-//4. add vessel settings color coding functionality
-//5. add vessel settings popup functionality
-//6. add vessel settings alert functionality
-//7. add vessel settings geofence functionality
-//8. add vessel settings tracking functionality
-//9. add vessel settings geofence functionality
