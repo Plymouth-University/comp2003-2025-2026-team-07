@@ -10,6 +10,7 @@ import api from './services/api';
 
 function NotificationBar({ user, onViewLog }) {
   const [summary, setSummary] = useState(null); // { total, unacked }
+  const [dismissed, setDismissed] = useState(false);
 
   const poll = useCallback(async () => {
     try {
@@ -33,7 +34,7 @@ function NotificationBar({ user, onViewLog }) {
     return () => clearInterval(iv);
   }, [user, poll]);
 
-  if (!summary) return null;
+  if (!summary || dismissed) return null;
 
   const hasUnacked = summary.unacked > 0;
   const barColor = hasUnacked ? '#ff9800' : '#2196F3';
@@ -49,6 +50,7 @@ function NotificationBar({ user, onViewLog }) {
       borderBottom: '1px solid ' + barColor + '55',
       fontSize: '0.85rem',
       color: barColor,
+      position: 'relative',
     }}>
       <span>📟</span>
       <span>
@@ -68,6 +70,24 @@ function NotificationBar({ user, onViewLog }) {
         }}
       >
         View Log →
+      </button>
+      <button
+        onClick={() => setDismissed(true)}
+        title="Dismiss"
+        style={{
+          position: 'absolute',
+          right: '12px',
+          background: 'none',
+          border: 'none',
+          color: barColor,
+          cursor: 'pointer',
+          fontSize: '1rem',
+          lineHeight: 1,
+          padding: '2px 6px',
+          opacity: 0.7,
+        }}
+      >
+        ✕
       </button>
     </div>
   );
