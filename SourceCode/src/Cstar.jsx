@@ -1,11 +1,17 @@
 // src/Cstar.jsx - FIXED VERSION WITH PROPER TEMPLATE LITERALS
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import api from './services/api';
 import './Cstar.css';
 import AlertBuilder from './AlertBuilder';
 import VesselSettingsModal from './VesselSettingsModal';
 
-function Cstar({ currentUser }) {
+const COMPOUND_TEMPLATES = [
+  { name: 'Multi-System Fault', threshold_count: 3, time_window_mins: 30,  description: 'Three or more distinct alerts active within 30 minutes' },
+  { name: 'Critical Pair',      threshold_count: 2, time_window_mins: 15,  description: 'Two alerts firing within 15 minutes' },
+  { name: 'Persistent Issues',  threshold_count: 2, time_window_mins: 120, description: 'Two or more alerts sustained over 2 hours' },
+];
+
+function Cstar({ currentUser, onNewAlert }) {
   const [vessels, setVessels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,6 +34,22 @@ function Cstar({ currentUser }) {
   const [savingCompound, setSavingCompound] = useState(false);
   const [editingVessel, setEditingVessel] = useState(null);
 
+  // Part 3 — compound template + rule selection state
+  const [activeTemplate, setActiveTemplate]   = useState(null);
+  const [templateEdits, setTemplateEdits]     = useState({});
+  const [selectedRuleIds, setSelectedRuleIds] = useState([]);
+
+  // Part 1 — alert notifications
+  const seenAlertIds   = useRef(new Set());
+  const isFirstPollRef = useRef(true);
+  const [notifications, setNotifications] = useState([]);
+
+  // Part 2 — demo mode (driven by backend polling)
+  const demoPollRef               = useRef(null);
+  const [demoVoltage,  setDemoVoltage]  = useState(10.5);
+  const [demoInterval, setDemoInterval] = useState(20);
+  const [demoStatus,   setDemoStatus]   = useState(null);
+
   const isAdmin = currentUser && currentUser.role === 'admin';
   const isSupervisor = currentUser && (currentUser.role === 'supervisor' || currentUser.role === 'admin');
 
@@ -44,6 +66,49 @@ function Cstar({ currentUser }) {
     const interval = setInterval(loadCompoundBadges, 30000);
     return () => clearInterval(interval);
   }, []);
+
+  // Part 1 — poll for new active alerts every 15 s
+  useEffect(() => {
+    const poll = async () => {
+      try {
+        const res = await api.getActiveAlerts();
+        const alerts = res?.data || [];
+        // Bug 3 fix: seed on first poll without showing any banners
+        if (isFirstPollRef.current) {
+          isFirstPollRef.current = false;
+          alerts.forEach(a => seenAlertIds.current.add(a.id));
+          return;
+        }
+        const fresh = alerts.filter(a => !seenAlertIds.current.has(a.id));
+        fresh.forEach(a => seenAlertIds.current.add(a.id));
+        if (fresh.length > 0) {
+          fresh.forEach(a => {
+            const notifId = a.id + '_' + Date.now();
+            const entry = { ...a, notifId };
+            setNotifications(prev => [...prev, entry]);
+            if (onNewAlert) onNewAlert(entry);
+          });
+        }
+      } catch {}
+    };
+    poll();
+    const iv = setInterval(poll, 15000);
+    return () => clearInterval(iv);
+  }, []);
+
+  // Part 2 — poll demo status every 3 s (admin only); clean up on unmount
+  useEffect(() => {
+    if (!isAdmin) return;
+    const poll = async () => {
+      try {
+        const res = await api.getDemoStatus();
+        setDemoStatus(res?.data ?? null);
+      } catch {}
+    };
+    poll();
+    demoPollRef.current = setInterval(poll, 3000);
+    return () => clearInterval(demoPollRef.current);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadVessels = async () => {
     try {
@@ -123,6 +188,31 @@ function Cstar({ currentUser }) {
       case 'alert': return 'status_alert';
       case 'offline': return 'status_offline';
       default: return '';
+    }
+  };
+
+  // Part 2 — demo mode handlers
+  const handleStartDemo = async () => {
+    try {
+      await api.startDemo(demoVoltage, demoInterval);
+      loadVessels();
+    } catch (err) {
+      alert('Failed to start demo: ' + err.message);
+    }
+  };
+
+  const handleStopDemo = async () => {
+    try { await api.stopDemo(); } catch (err) {
+      alert('Failed to stop demo: ' + err.message);
+    }
+  };
+
+  const handleResetDemo = async () => {
+    try {
+      await api.resetDemo();
+      loadVessels();
+    } catch (err) {
+      alert('Failed to reset demo: ' + err.message);
     }
   };
 
@@ -420,6 +510,130 @@ function Cstar({ currentUser }) {
 
   return (
     <div className='content_container'>
+
+      {/* Part 1 — Alert notification stack (fixed, top-right) */}
+      <div style={{ position: 'fixed', top: '70px', right: '16px', zIndex: 9999, display: 'flex', flexDirection: 'column', gap: '10px', pointerEvents: 'none' }}>
+        {notifications.map(n => (
+          <div key={n.notifId} style={{
+            pointerEvents: 'all',
+            minWidth: '300px', maxWidth: '380px',
+            backgroundColor: 'rgba(15,15,25,0.97)',
+            border: '1px solid #f44336',
+            borderLeft: '4px solid #f44336',
+            borderRadius: '8px',
+            padding: '12px 14px',
+            boxShadow: '0 4px 24px rgba(0,0,0,0.5)',
+            animation: 'slideInRight 0.3s ease-out',
+            color: '#fff',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '10px' }}>
+              <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
+                <span style={{ color: '#f44336', fontSize: '1.1rem', lineHeight: 1, marginTop: '2px' }}>⚠</span>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: '0.9rem', color: '#f44336', marginBottom: '3px' }}>
+                    ALERT — {n.vessels?.name || 'Unknown Vessel'}
+                  </div>
+                  <div style={{ fontSize: '0.85rem', color: '#e0e0e0', marginBottom: n.pagem_sent ? '5px' : 0 }}>
+                    {n.alert_text || n.message || 'Alert triggered'}
+                  </div>
+                  {n.pagem_sent && (
+                    <div style={{ fontSize: '0.78rem', color: '#f59e0b', fontWeight: 600 }}>📟 PAGEM NOTIFIED</div>
+                  )}
+                </div>
+              </div>
+              <button
+                onClick={() => setNotifications(prev => prev.filter(x => x.notifId !== n.notifId))}
+                style={{ background: 'none', border: 'none', color: '#757575', cursor: 'pointer', fontSize: '1rem', lineHeight: 1, padding: '0 0 0 4px', flexShrink: 0 }}
+              >✕</button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Part 2 — Demo Mode panel (admin only, status driven by backend poll) */}
+      {isAdmin && (() => {
+        const running   = demoStatus?.running        ?? false;
+        const injCount  = demoStatus?.injections_count ?? 0;
+        const fired     = demoStatus?.alert_fired    ?? false;
+        const cLabel    = demoStatus?.last_result?.consecutivity_progress?.label || '';
+        const pagemSent = demoStatus?.last_result?.pagem_sent ?? false;
+        return (
+          <div style={{
+            marginBottom: '20px', padding: '14px 18px',
+            borderLeft: '4px solid #f59e0b',
+            backgroundColor: 'rgba(245,158,11,0.06)',
+            border: '1px solid rgba(245,158,11,0.25)',
+            borderLeftWidth: '4px', borderRadius: '8px',
+          }}>
+            {/* Header row */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px', marginBottom: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <span style={{ fontWeight: 700, color: '#f59e0b', fontSize: '0.95rem' }}>Demo Mode</span>
+                <span style={{ fontSize: '0.82rem', color: running ? '#4caf50' : '#757575' }}>
+                  {running ? '● Running' : '○ Stopped'}
+                </span>
+              </div>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {!running && (
+                  <button onClick={handleStartDemo}
+                    style={{ padding: '6px 16px', backgroundColor: '#f59e0b', color: '#000', border: 'none', borderRadius: '6px', fontWeight: 700, cursor: 'pointer', fontSize: '0.85rem' }}>
+                    Start Demo
+                  </button>
+                )}
+                {running && (
+                  <button onClick={handleStopDemo}
+                    style={{ padding: '6px 14px', backgroundColor: 'transparent', border: '1px solid #f59e0b', borderRadius: '6px', color: '#f59e0b', cursor: 'pointer', fontSize: '0.85rem' }}>
+                    Stop
+                  </button>
+                )}
+                <button onClick={handleResetDemo}
+                  style={{ padding: '6px 14px', backgroundColor: 'transparent', border: '1px solid #555', borderRadius: '6px', color: '#a0a0a0', cursor: 'pointer', fontSize: '0.85rem' }}>
+                  Reset
+                </button>
+              </div>
+            </div>
+
+            {/* Inputs — editable only when stopped */}
+            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', marginBottom: demoStatus ? '12px' : 0 }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.78rem', color: '#a0a0a0', marginBottom: '3px' }}>Battery voltage (V)</label>
+                <input type="number" min="0" max="20" step="0.1"
+                  value={demoVoltage}
+                  onChange={e => setDemoVoltage(parseFloat(e.target.value) || 0)}
+                  disabled={running}
+                  style={{ width: '90px', padding: '5px 8px', backgroundColor: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '5px', color: '#fff', fontSize: '0.9rem' }}
+                />
+              </div>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.78rem', color: '#a0a0a0', marginBottom: '3px' }}>Injection interval (seconds)</label>
+                <input type="number" min="5" max="120" step="1"
+                  value={demoInterval}
+                  onChange={e => setDemoInterval(parseInt(e.target.value) || 5)}
+                  disabled={running}
+                  style={{ width: '90px', padding: '5px 8px', backgroundColor: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '5px', color: '#fff', fontSize: '0.9rem' }}
+                />
+              </div>
+            </div>
+
+            {/* Live status (only once first poll arrives) */}
+            {demoStatus && (
+              <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', alignItems: 'center', fontSize: '0.88rem' }}>
+                <span style={{ color: '#a0a0a0' }}>Injections: <strong style={{ color: '#e0e0e0' }}>{injCount}</strong></span>
+                <span style={{ color: fired ? '#4caf50' : '#757575' }}>
+                  Alert fired: <strong>{fired ? 'Yes' : 'No'}</strong>
+                </span>
+                {cLabel && <span style={{ color: '#f59e0b' }}>{cLabel}</span>}
+                {pagemSent && (
+                  <span style={{ backgroundColor: 'rgba(245,158,11,0.15)', border: '1px solid #f59e0b', borderRadius: '5px', padding: '2px 8px', color: '#f59e0b', fontWeight: 700, fontSize: '0.8rem' }}>
+                    📟 Pagem sent!
+                  </span>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      })()}
+
       <div className="vessel_header" style={{ borderBottom: 'none' }}>
         <h1>Fleet Dashboard</h1>
         <div className="fleet_count_badge">
@@ -645,6 +859,98 @@ function Cstar({ currentUser }) {
                 {showCompoundBuilder && (
                   <div className="compound_form">
                     <h4>{editingCompoundRule ? 'Edit Compound Rule' : 'New Compound Rule'}</h4>
+
+                    {/* Part 3a — Template cards */}
+                    <div style={{ marginBottom: '16px' }}>
+                      <label style={{ fontSize: '0.82rem', color: '#a0a0a0', display: 'block', marginBottom: '8px' }}>Quick templates</label>
+                      <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                        {COMPOUND_TEMPLATES.map((tpl, i) => {
+                          const isActive = activeTemplate === i;
+                          const edits = templateEdits[i] || tpl;
+                          return (
+                            <div
+                              key={i}
+                              style={{
+                                flex: '1', minWidth: '160px',
+                                padding: '10px 12px',
+                                border: isActive ? '1px solid #2196F3' : '1px solid rgba(255,255,255,0.1)',
+                                borderRadius: '7px',
+                                backgroundColor: isActive ? 'rgba(33,150,243,0.08)' : 'rgba(255,255,255,0.03)',
+                                cursor: 'pointer',
+                                transition: 'border-color 0.15s',
+                              }}
+                              onClick={() => {
+                                if (activeTemplate !== i) {
+                                  setActiveTemplate(i);
+                                  setTemplateEdits({ [i]: { ...tpl } });
+                                  setCompoundFormData(f => ({ ...f, name: tpl.name, threshold_count: tpl.threshold_count, time_window_mins: tpl.time_window_mins, description: tpl.description }));
+                                }
+                              }}
+                            >
+                              {!isActive ? (
+                                <>
+                                  <div style={{ fontWeight: 700, fontSize: '0.88rem', color: '#e0e0e0', marginBottom: '4px' }}>{tpl.name}</div>
+                                  <div style={{ fontSize: '0.78rem', color: '#757575' }}>{tpl.threshold_count} alerts · {tpl.time_window_mins} min</div>
+                                  <div style={{ fontSize: '0.76rem', color: '#555', marginTop: '3px' }}>{tpl.description}</div>
+                                </>
+                              ) : (
+                                <div onClick={e => e.stopPropagation()}>
+                                  <input
+                                    style={{ width: '100%', marginBottom: '5px', backgroundColor: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: '#fff', padding: '4px 7px', fontSize: '0.83rem', boxSizing: 'border-box' }}
+                                    value={edits.name}
+                                    onChange={e => {
+                                      const v = { ...edits, name: e.target.value };
+                                      setTemplateEdits({ [i]: v });
+                                      setCompoundFormData(f => ({ ...f, name: v.name }));
+                                    }}
+                                    placeholder="Name"
+                                  />
+                                  <div style={{ display: 'flex', gap: '5px', marginBottom: '5px' }}>
+                                    <input type="number" min="1"
+                                      style={{ width: '50%', backgroundColor: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: '#fff', padding: '4px 7px', fontSize: '0.83rem', boxSizing: 'border-box' }}
+                                      value={edits.threshold_count}
+                                      onChange={e => {
+                                        const v = { ...edits, threshold_count: parseInt(e.target.value) || 1 };
+                                        setTemplateEdits({ [i]: v });
+                                        setCompoundFormData(f => ({ ...f, threshold_count: v.threshold_count }));
+                                      }}
+                                      placeholder="Alerts"
+                                    />
+                                    <input type="number" min="1"
+                                      style={{ width: '50%', backgroundColor: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: '#fff', padding: '4px 7px', fontSize: '0.83rem', boxSizing: 'border-box' }}
+                                      value={edits.time_window_mins}
+                                      onChange={e => {
+                                        const v = { ...edits, time_window_mins: parseInt(e.target.value) || 1 };
+                                        setTemplateEdits({ [i]: v });
+                                        setCompoundFormData(f => ({ ...f, time_window_mins: v.time_window_mins }));
+                                      }}
+                                      placeholder="Mins"
+                                    />
+                                  </div>
+                                  <input
+                                    style={{ width: '100%', marginBottom: '7px', backgroundColor: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '4px', color: '#fff', padding: '4px 7px', fontSize: '0.78rem', boxSizing: 'border-box' }}
+                                    value={edits.description}
+                                    onChange={e => {
+                                      const v = { ...edits, description: e.target.value };
+                                      setTemplateEdits({ [i]: v });
+                                      setCompoundFormData(f => ({ ...f, description: v.description }));
+                                    }}
+                                    placeholder="Description"
+                                  />
+                                  <button
+                                    onClick={() => setActiveTemplate(null)}
+                                    style={{ width: '100%', padding: '4px', backgroundColor: '#2196F3', border: 'none', borderRadius: '4px', color: '#fff', cursor: 'pointer', fontSize: '0.8rem' }}
+                                  >
+                                    Use This Template
+                                  </button>
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+
                     <div className="compound_form_group">
                       <label>Rule Name</label>
                       <input
@@ -665,6 +971,7 @@ function Cstar({ currentUser }) {
                     </div>
                     <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
                       <div className="compound_form_group">
+                        {/* Part 3c — dynamic trigger label */}
                         <label>Trigger when</label>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                           <input
@@ -674,11 +981,13 @@ function Cstar({ currentUser }) {
                             onChange={e => setCompoundFormData({ ...compoundFormData, threshold_count: parseInt(e.target.value) || 1 })}
                             style={{ width: '70px' }}
                           />
-                          <span style={{ color: '#a0a0a0', whiteSpace: 'nowrap' }}>or more distinct alerts are active</span>
+                          <span style={{ color: '#a0a0a0', whiteSpace: 'nowrap' }}>
+                            or more distinct alerts are active within {compoundFormData.time_window_mins} min
+                          </span>
                         </div>
                       </div>
                       <div className="compound_form_group">
-                        <label>Within</label>
+                        <label>Within (minutes)</label>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                           <input
                             type="number"
@@ -691,6 +1000,39 @@ function Cstar({ currentUser }) {
                         </div>
                       </div>
                     </div>
+
+                    {/* Part 3b — specific rule selection */}
+                    {vesselAlertRules.length > 0 && (
+                      <div className="compound_form_group">
+                        <label>Monitor specific rules <span style={{ color: '#555', fontWeight: 400 }}>(optional — leave blank to monitor all alerts)</span></label>
+                        {/*
+                          NOTE: Check schema.prisma — if compound_alert_rules has a rule_ids column,
+                          include selectedRuleIds in the POST/PUT payload (see handleSaveCompoundRule).
+                          If it does not, this selection is UI-only and stored in localStorage as a
+                          known limitation until the schema is updated.
+                        */}
+                        <div style={{ maxHeight: '140px', overflowY: 'auto', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '6px', padding: '8px' }}>
+                          {vesselAlertRules.map(rule => (
+                            <label key={rule.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '4px 0', cursor: 'pointer', fontSize: '0.85rem', color: '#c0c0c0' }}>
+                              <input
+                                type="checkbox"
+                                checked={selectedRuleIds.includes(rule.id)}
+                                onChange={e => {
+                                  setSelectedRuleIds(prev =>
+                                    e.target.checked ? [...prev, rule.id] : prev.filter(id => id !== rule.id)
+                                  );
+                                }}
+                              />
+                              <span style={{ fontWeight: 600, color: '#e0e0e0' }}>{rule.name}</span>
+                              <span style={{ color: '#757575', fontFamily: 'monospace', fontSize: '0.8rem' }}>
+                                {rule.field_name} {rule.operator} {rule.threshold}
+                              </span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     <div className="compound_form_group">
                       <label className="checkbox_label">
                         <input

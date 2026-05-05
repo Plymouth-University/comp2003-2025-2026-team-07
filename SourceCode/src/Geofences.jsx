@@ -1038,6 +1038,25 @@ function Geofences({ currentUser }) {
             ════════════════════════════════ */}
         <aside className="geo_sidebar">
 
+          {/* ── Fit to fleet button ────────────────────────────────────── */}
+          <div className="sb_section" style={{ paddingBottom: '10px' }}>
+            <button
+              className="sb_tool_btn"
+              onClick={() => {
+                if (!map_instance.current || !vessel_markers.current.length) return;
+                const group = L.featureGroup(vessel_markers.current);
+                map_instance.current.fitBounds(group.getBounds().pad(0.15));
+              }}
+              disabled={!vessel_markers.current.length}
+              title="Zoom map to show all vessels"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+              </svg>
+              Fit to Fleet
+            </button>
+          </div>
+
           {/* ── Track Period selector ──────────────────────────────────────
               Always visible. Lets the user choose how far back the vessel
               trackback path should go. Changing this automatically reloads

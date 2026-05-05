@@ -330,6 +330,25 @@ class ApiService {
     });
   }
 
+  async startDemo(batteryVoltage, intervalSeconds) {
+    return this.request('/demo/start', {
+      method: 'POST',
+      body: JSON.stringify({ battery_voltage: batteryVoltage, interval_seconds: intervalSeconds })
+    });
+  }
+
+  async stopDemo() {
+    return this.request('/demo/stop', { method: 'POST' });
+  }
+
+  async getDemoStatus() {
+    return this.request('/demo/status');
+  }
+
+  async resetDemo() {
+    return this.request('/demo/reset', { method: 'POST' });
+  }
+
   async triggerTestAlert(vesselId, message) {
     return this.request('/alerts/trigger-test', {
       method: 'POST',

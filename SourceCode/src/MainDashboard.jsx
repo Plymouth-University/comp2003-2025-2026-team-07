@@ -95,18 +95,27 @@ function NotificationBar({ user, onViewLog }) {
 
 function MainDashboard({ user, onLogout }) {
   const [activeTab, setActiveTab] = useState('cstars');
+  const [notifHistory,    setNotifHistory]    = useState([]);
+  const [historyOpen,     setHistoryOpen]     = useState(false);
+  const [lastOpenedCount, setLastOpenedCount] = useState(0);
+
+  const handleNewAlert = (entry) => {
+    setNotifHistory(prev => [entry, ...prev]);
+  };
+
+  const unreadCount = notifHistory.length - lastOpenedCount;
 
   const isAdmin      = user?.role === 'admin';
   const isSupervisor = user?.role === 'supervisor' || isAdmin;
 
   const renderContent = () => {
     switch (activeTab) {
-      case 'cstars':       return <Cstar currentUser={user} />;
+      case 'cstars':       return <Cstar currentUser={user} onNewAlert={handleNewAlert} />;
       case 'geofences':    return <Geofences currentUser={user} />;
       case 'usersupport':  return <UserSupport currentUser={user} />;
       case 'settings':     return <Settings />;
       case 'pagelog':      return <PageLog currentUser={user} />;
-      default:             return <Cstar currentUser={user} />;
+      default:             return <Cstar currentUser={user} onNewAlert={handleNewAlert} />;
     }
   };
 
@@ -124,9 +133,115 @@ function MainDashboard({ user, onLogout }) {
           {isSupervisor && (
             <button onClick={() => setActiveTab('pagelog')} className={activeTab === 'pagelog' ? 'active' : ''}>PAGE LOG</button>
           )}
-          <button onClick={onLogout} style={{ marginLeft: 'auto', backgroundColor: '#d32f2f' }}>LOGOUT</button>
+          <button
+            onClick={() => {
+              setHistoryOpen(v => {
+                if (!v) setLastOpenedCount(notifHistory.length);
+                return !v;
+              });
+            }}
+            style={{
+              marginLeft: 'auto',
+              position: 'relative',
+              background: historyOpen ? 'rgba(33,150,243,0.2)' : 'none',
+              border: '1px solid rgba(255,255,255,0.15)',
+              borderRadius: '6px',
+              color: '#fff',
+              cursor: 'pointer',
+              padding: '6px 10px',
+              fontSize: '1.1rem',
+              lineHeight: 1,
+            }}
+            title="Alert notifications"
+          >
+            🔔
+            {unreadCount > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '-6px',
+                right: '-6px',
+                backgroundColor: '#f44336',
+                color: '#fff',
+                borderRadius: '50%',
+                fontSize: '0.65rem',
+                fontWeight: 700,
+                minWidth: '16px',
+                height: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '0 3px',
+              }}>
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
+            )}
+          </button>
+          <button onClick={onLogout} style={{ backgroundColor: '#d32f2f' }}>LOGOUT</button>
         </div>
       </div>
+
+      {historyOpen && (
+        <div style={{
+          position: 'absolute',
+          top: '58px',
+          right: '12px',
+          width: '360px',
+          maxHeight: '420px',
+          backgroundColor: '#1e1e1e',
+          border: '1px solid rgba(255,255,255,0.12)',
+          borderRadius: '10px',
+          boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
+          zIndex: 2000,
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+        }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '12px 16px',
+            borderBottom: '1px solid rgba(255,255,255,0.08)',
+          }}>
+            <span style={{ color: '#fff', fontWeight: 600, fontSize: '0.95rem' }}>Alert Notifications</span>
+            <button
+              onClick={() => { setNotifHistory([]); setLastOpenedCount(0); }}
+              style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: '0.8rem', padding: '2px 6px' }}
+            >
+              Clear all
+            </button>
+          </div>
+          <div style={{ overflowY: 'auto', flex: 1 }}>
+            {notifHistory.length === 0 ? (
+              <p style={{ color: '#555', textAlign: 'center', padding: '30px 16px', fontSize: '0.88rem' }}>
+                No alerts yet this session.
+              </p>
+            ) : (
+              notifHistory.map((n, i) => (
+                <div key={n.notifId || i} style={{
+                  padding: '10px 16px',
+                  borderBottom: '1px solid rgba(255,255,255,0.05)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '3px',
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ color: '#f59e0b', fontWeight: 600, fontSize: '0.82rem' }}>
+                      {n.vessels?.name || n.vessel_name || 'Unknown Vessel'}
+                    </span>
+                    <span style={{ color: '#555', fontSize: '0.75rem' }}>
+                      {n.notifId ? new Date(parseInt(n.notifId.split('_')[1])).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : ''}
+                    </span>
+                  </div>
+                  <span style={{ color: '#ccc', fontSize: '0.83rem', lineHeight: 1.4 }}>
+                    {n.message || n.alert_message || '—'}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      )}
 
       {isSupervisor && (
         <NotificationBar user={user} onViewLog={() => setActiveTab('pagelog')} />
