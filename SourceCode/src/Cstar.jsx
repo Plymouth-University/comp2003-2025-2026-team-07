@@ -36,6 +36,7 @@ function Cstar({ currentUser }) {
     // Refresh every 30 seconds
     const interval = setInterval(loadVessels, 30000);
     return () => clearInterval(interval);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -232,6 +233,18 @@ function Cstar({ currentUser }) {
     } catch (err) {
       console.error('Error deleting rule:', err);
       alert('Error deleting rule: ' + err.message);
+    }
+  };
+
+  const handleToggleRuleEnabled = async (rule) => {
+    try {
+      await api.toggleAlertRuleEnabled(rule.id, !rule.enabled);
+      setVesselAlertRules(vesselAlertRules.map(r =>
+        r.id === rule.id ? { ...r, enabled: !r.enabled } : r
+      ));
+    } catch (err) {
+      console.error('Error toggling rule:', err);
+      alert('Error toggling rule: ' + err.message);
     }
   };
 
@@ -587,6 +600,15 @@ function Cstar({ currentUser }) {
                           </span>
                         </td>
                         <td>
+                          {isAdmin && (
+                            <button
+                              className={`action_btn${rule.enabled ? ' delete' : ''}`}
+                              onClick={() => handleToggleRuleEnabled(rule)}
+                              style={{ marginRight: '5px' }}
+                            >
+                              {rule.enabled ? 'Disable' : 'Enable'}
+                            </button>
+                          )}
                           <button
                             className="action_btn"
                             onClick={() => handleEditRule(rule)}

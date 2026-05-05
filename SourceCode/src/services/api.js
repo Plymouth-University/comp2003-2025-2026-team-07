@@ -216,6 +216,13 @@ class ApiService {
     });
   }
 
+  async toggleAlertRuleEnabled(id, enabled) {
+    return this.request('/alerts/rules/' + id + '/enabled', {
+      method: 'PATCH',
+      body: JSON.stringify({ enabled })
+    });
+  }
+
   async getActiveAlerts() {
     return this.request('/alerts/active');
   }
@@ -370,4 +377,5 @@ class ApiService {
   }
 }
 
-export default new ApiService();
+const apiService = new ApiService();
+export default apiService;
